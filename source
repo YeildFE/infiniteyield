@@ -12494,6 +12494,7 @@ addcmd("findfriendgroups", {}, function(args, speaker)
     notify("Checking Players", "This might take a while (slow function)")
 
     local groups = playerGroups()
+    local playerList = StarterGui:GetCoreGuiEnabled(Enum.CoreGuiType.PlayerList)
 
     local result = ""
     local index = 1
@@ -12502,8 +12503,8 @@ addcmd("findfriendgroups", {}, function(args, speaker)
     for _, group in ipairs(groups) do
         if #group == 1 then continue end
         local names = {}
-        for _, p in ipairs(group) do
-            table.insert(names, p.Name)
+        for _, player in ipairs(group) do
+            table.insert(names, playerList and player.DisplayName or player.Name)
         end
         result = result .. index .. ". " .. table.concat(names, ", ") .. "\n"
         index = index + 1
