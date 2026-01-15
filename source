@@ -8052,9 +8052,11 @@ addcmd('noesp',{'unesp','unespteam'},function(args, speaker)
 	end
 end)
 
-addcmd('esptransparency',{},function(args, speaker)
-	espTransparency = (args[1] and isNumber(args[1]) and args[1]) or 0.3
-	updatesaves()
+addcmd("esptransparency", {}, function(args, speaker)
+    espTransparency = tonumber(args[1]) or 0.3
+    if ESPenabled then execCmd("esp") end
+    if CHMSenabled then execCmd("chams") end
+    updatesaves()
 end)
 
 local espParts = {}
