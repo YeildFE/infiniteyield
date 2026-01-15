@@ -2958,8 +2958,8 @@ useFactorySettings = function()
 	PluginsTable = {}
 end
 
-createPopup = function(text)
-	local FileError = Instance.new("Frame")
+function createPopup(title, text)
+	local Popup = Instance.new("Frame")
 	local background = Instance.new("Frame")
 	local Directions = Instance.new("TextLabel")
 	local shadow = Instance.new("Frame")
@@ -2967,16 +2967,16 @@ createPopup = function(text)
 	local Exit = Instance.new("TextButton")
 	local ExitImage = Instance.new("ImageLabel")
 
-	FileError.Name = randomString()
-	FileError.Parent = ScaledHolder
-	FileError.Active = true
-	FileError.BackgroundTransparency = 1
-	FileError.Position = UDim2.new(0.5, -180, 0, 290)
-	FileError.Size = UDim2.new(0, 360, 0, 20)
-	FileError.ZIndex = 10
+	Popup.Name = randomString()
+	Popup.Parent = ScaledHolder
+	Popup.Active = true
+	Popup.BackgroundTransparency = 1
+	Popup.Position = UDim2.new(0.5, -180, 0, -500)
+	Popup.Size = UDim2.new(0, 360, 0, 20)
+	Popup.ZIndex = 10
 
 	background.Name = "background"
-	background.Parent = FileError
+	background.Parent = Popup
 	background.Active = true
 	background.BackgroundColor3 = Color3.fromRGB(36, 36, 37)
 	background.BorderSizePixel = 0
@@ -3000,7 +3000,7 @@ createPopup = function(text)
 	Directions.ZIndex = 10
 
 	shadow.Name = "shadow"
-	shadow.Parent = FileError
+	shadow.Parent = Popup
 	shadow.BackgroundColor3 = Color3.fromRGB(46, 46, 47)
 	shadow.BorderSizePixel = 0
 	shadow.Size = UDim2.new(0, 360, 0, 20)
@@ -3013,7 +3013,7 @@ createPopup = function(text)
 	PopupText.ZIndex = 10
 	PopupText.Font = Enum.Font.SourceSans
 	PopupText.TextSize = 14
-	PopupText.Text = "File Error"
+	PopupText.Text = title
 	PopupText.TextColor3 = Color3.new(1, 1, 1)
 	PopupText.TextWrapped = true
 
@@ -3033,8 +3033,12 @@ createPopup = function(text)
 	ExitImage.Image = getcustomasset("infiniteyield/assets/close.png")
 	ExitImage.ZIndex = 10
 
+	Popup:TweenPosition(UDim2.new(0.5, -180, 0, 150), "InOut", "Quart", 0.5, true, nil)
+
 	Exit.MouseButton1Click:Connect(function()
-		FileError:Destroy()
+		Popup:TweenPosition(UDim2.new(0.5, -180, 0, -500), "InOut", "Quart", 0.5, true, nil)
+		task.wait(0.6)
+		Popup:Destroy()
 	end)
 end
 
@@ -3085,7 +3089,7 @@ function saves()
 				else
 					nosaves = true
 					useFactorySettings()
-					createPopup("There was a problem writing a save file to your PC.\n\nPlease contact the developer/support team for your exploit and tell them writefile/readfile is not working.\n\nYour settings, keybinds, waypoints, and aliases will not save if you continue.\n\nThings to try:\n> Make sure a 'workspace' folder is located in the same folder as your exploit\n> If your exploit is inside of a zip/rar file, extract it.\n> Rejoin the game and try again or restart your PC and try again.")
+					createPopup("File Error", "There was a problem writing a save file to your PC.\n\nPlease contact the developer/support team for your exploit and tell them writefile/readfile is not working.\n\nYour settings, keybinds, waypoints, and aliases will not save if you continue.\n\nThings to try:\n> Make sure a 'workspace' folder is located in the same folder as your exploit\n> If your exploit is inside of a zip/rar file, extract it.\n> Rejoin the game and try again or restart your PC and try again.")
 				end
 			end
 		else
@@ -3097,14 +3101,14 @@ function saves()
 			else
 				nosaves = true
 				useFactorySettings()
-				createPopup("There was a problem writing a save file to your PC.\n\nPlease contact the developer/support team for your exploit and tell them writefile/readfile is not working.\n\nYour settings, keybinds, waypoints, and aliases will not save if you continue.\n\nThings to try:\n> Make sure a 'workspace' folder is located in the same folder as your exploit\n> If your exploit is inside of a zip/rar file, extract it.\n> Rejoin the game and try again or restart your PC and try again.")
+				createPopup("File Error", "There was a problem writing a save file to your PC.\n\nPlease contact the developer/support team for your exploit and tell them writefile/readfile is not working.\n\nYour settings, keybinds, waypoints, and aliases will not save if you continue.\n\nThings to try:\n> Make sure a 'workspace' folder is located in the same folder as your exploit\n> If your exploit is inside of a zip/rar file, extract it.\n> Rejoin the game and try again or restart your PC and try again.")
 			end
 		end
 	else
 		if jsonAttempts >= 10 then
 			nosaves = true
 			useFactorySettings()
-			createPopup("Sorry, we have attempted to parse your save file, but it is unreadable!\n\nInfinite Yield is now using factory settings until your exploit's file system works.\n\nYour save file has not been deleted.")
+			createPopup("File Error", "Sorry, we have attempted to parse your save file, but it is unreadable!\n\nInfinite Yield is now using factory settings until your exploit's file system works.\n\nYour save file has not been deleted.")
 		else
 			nosaves = true
 			useFactorySettings()
@@ -12513,7 +12517,7 @@ addcmd("findfriendgroups", {}, function(args, speaker)
         found = found + 1
     end
 
-    notify("Friend Groups", found == 0 and "None" or result)
+    createPopup("Friend Groups", found == 0 and "None" or result)
 end)
 
 addcmd('removeterrain',{'rterrain','noterrain'},function(args, speaker)
