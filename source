@@ -299,14 +299,16 @@ MAX_DISPLAY_ORDER = 2147483647
 if get_hidden_gui or gethui then
     local hiddenUI = get_hidden_gui or gethui
     local Main = Instance.new("ScreenGui")
-    Main.Name = randomString()
+    -- IY_NAME: was randomString()
+    Main.Name = "IYMainGui"
     Main.ResetOnSpawn = false
     Main.DisplayOrder = MAX_DISPLAY_ORDER
     Main.Parent = hiddenUI()
     PARENT = Main
 elseif (not is_sirhurt_closure) and (syn and syn.protect_gui) then
     local Main = Instance.new("ScreenGui")
-    Main.Name = randomString()
+    -- IY_NAME: was randomString()
+    Main.Name = "IYMainGui"
     Main.ResetOnSpawn = false
     Main.DisplayOrder = MAX_DISPLAY_ORDER
     syn.protect_gui(Main)
@@ -316,7 +318,8 @@ elseif COREGUI:FindFirstChild("RobloxGui") then
     PARENT = COREGUI.RobloxGui
 else
     local Main = Instance.new("ScreenGui")
-    Main.Name = randomString()
+    -- IY_NAME: was randomString()
+    Main.Name = "IYMainGui"
     Main.ResetOnSpawn = false
     Main.DisplayOrder = MAX_DISPLAY_ORDER
     Main.Parent = COREGUI
@@ -330,13 +333,16 @@ text1 = {}
 text2 = {}
 scroll = {}
 
-ScaledHolder.Name = randomString()
+-- IY_NAME: was randomString()
+ScaledHolder.Name = "IYScaledHolder"
 ScaledHolder.Size = UDim2.fromScale(1, 1)
 ScaledHolder.BackgroundTransparency = 1
 ScaledHolder.Parent = PARENT
-Scale.Name = randomString()
+-- IY_NAME: was randomString()
+Scale.Name = "IYUIScale"
 
-Holder.Name = randomString()
+-- IY_NAME: was randomString()
+Holder.Name = "IYMainFrame"
 Holder.Parent = ScaledHolder
 Holder.Active = true
 Holder.BackgroundColor3 = Color3.fromRGB(46, 46, 47)
@@ -632,7 +638,8 @@ Example.TextXAlignment = Enum.TextXAlignment.Left
 Example.ZIndex = 10
 table.insert(text1,Example)
 
-Notification.Name = randomString()
+-- IY_NAME: was randomString()
+Notification.Name = "IYNotification"
 Notification.Parent = ScaledHolder
 Notification.BackgroundColor3 = Color3.fromRGB(36, 36, 37)
 Notification.BorderSizePixel = 0
@@ -699,7 +706,8 @@ PinImage.Size = UDim2.new(0, 14, 0, 14)
 PinImage.ZIndex = 10
 PinImage.Image = getcustomasset("infiniteyield/assets/pin.png")
 
-Tooltip.Name = randomString()
+-- IY_NAME: was randomString()
+Tooltip.Name = "IYTooltip"
 Tooltip.Parent = ScaledHolder
 Tooltip.Active = true
 Tooltip.BackgroundColor3 = Color3.fromRGB(36, 36, 37)
@@ -876,7 +884,8 @@ Delete_2.ZIndex = 10
 table.insert(shade3,Delete_2)
 table.insert(text2,Delete_2)
 
-KeybindEditor.Name = randomString()
+-- IY_NAME: was randomString()
+KeybindEditor.Name = "IYKeybindEditor"
 KeybindEditor.Parent = ScaledHolder
 KeybindEditor.Active = true
 KeybindEditor.BackgroundTransparency = 1
@@ -1450,7 +1459,8 @@ Delete_7.ZIndex = 10
 table.insert(shade3,Delete_7)
 table.insert(text2,Delete_7)
 
-PluginEditor.Name = randomString()
+-- IY_NAME: was randomString()
+PluginEditor.Name = "IYPluginEditor"
 PluginEditor.Parent = ScaledHolder
 PluginEditor.BorderSizePixel = 0
 PluginEditor.Active = true
@@ -1626,7 +1636,8 @@ PositionsHint.TextWrapped = true
 PositionsHint.ZIndex = 10
 table.insert(text1,PositionsHint)
 
-ToPartFrame.Name = randomString()
+-- IY_NAME: was randomString()
+ToPartFrame.Name = "IYTeleportToPart"
 ToPartFrame.Parent = ScaledHolder
 ToPartFrame.Active = true
 ToPartFrame.BackgroundTransparency = 1
@@ -1739,7 +1750,8 @@ ExitImage_5.Size = UDim2.new(0, 10, 0, 10)
 ExitImage_5.Image = getcustomasset("infiniteyield/assets/close.png")
 ExitImage_5.ZIndex = 10
 
-logs.Name = randomString()
+-- IY_NAME: was randomString()
+logs.Name = "IYLogsPanel"
 logs.Parent = ScaledHolder
 logs.Active = true
 logs.BackgroundTransparency = 1
@@ -2355,7 +2367,8 @@ eventEditor = (function()
 		{52,"TextButton",{BackgroundColor3=currentShade1,BorderSizePixel=0,Font=3,Name="Settings",Parent={49},Position=UDim2.new(1,-40,0,0),Size=UDim2.new(0,20,0,20),Text="",TextColor3=Color3.new(1,1,1),TextSize=18,ZIndex=10,}},
 		{53,"ImageLabel",{BackgroundColor3=Color3.new(1,1,1),BackgroundTransparency=1,Image=getcustomasset("infiniteyield/assets/settings.png"),Parent={52},Position=UDim2.new(0,2,0,2),Size=UDim2.new(0,16,0,16),ZIndex=10,}},
 	})
-	main.Name = randomString()
+	-- IY_NAME: was randomString()
+	main.Name = "IYEventEditor"
 	local mainFrame = main:WaitForChild("Content")
 	local eventList = mainFrame:WaitForChild("List")
 	local eventListHolder = eventList:WaitForChild("Holder")
@@ -2384,7 +2397,7 @@ eventEditor = (function()
 	local currentlyEditingCmd = nil
 
 	settingsFrame:WaitForChild("Close").MouseButton1Click:Connect(function()
-		TweenService:Create(settingsFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {Position = UDim2.new(0,-150,0,0)}):Play(),true)
+		TweenService:Create(settingsFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {Position = UDim2.new(0,-150,0,0)}):Play()
 	end)
 
 	local function resizeList()
@@ -2613,7 +2626,7 @@ eventEditor = (function()
 			end
 		end
 		resizeSettingsList()
-		TweenService:Create(settingsFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {Position = UDim2.new(0,0,0,0)}):Play(),true)
+		TweenService:Create(settingsFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {Position = UDim2.new(0,0,0,0)}):Play()
 	end
 
 	local function defaultSettings(ev)
@@ -2686,7 +2699,7 @@ eventEditor = (function()
 						resizeList()
 
 						if currentlyEditingCmd == cmd then
-							TweenService:Create(settingsFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {Position = UDim2.new(0,-150,0,0)}):Play(),true)
+							TweenService:Create(settingsFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {Position = UDim2.new(0,-150,0,0)}):Play()
 						end
 						if onEdited then onEdited() end
 					end)
@@ -2748,7 +2761,7 @@ eventEditor = (function()
 	end
 
 	main.TopBar.Close.MouseButton1Click:Connect(function()
-		TweenService:Create(main, TweenInfo.new(0.5, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut), {Position = UDim2.new(0.5,-175,0,-500)}):Play(), true, nil)
+		TweenService:Create(main, TweenInfo.new(0.5, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut), {Position = UDim2.new(0.5,-175,0,-500)}):Play()
 	end)
 	dragGUI(main)
 	main.Parent = ScaledHolder
@@ -2892,9 +2905,10 @@ reference = (function()
 	table.insert(scroll,main.Content.List)
 	table.insert(shade1,main.Content)
 	table.insert(shade2,main.TopBar)
-	main.Name = randomString()
+	-- IY_NAME: was randomString()
+	main.Name = "IYReferenceGUI"
 	main.TopBar.Close.MouseButton1Click:Connect(function()
-		TweenService:Create(main, TweenInfo.new(0.5, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut), {Position = UDim2.new(0.5,-250,0,-500)}):Play(), true, nil)
+		TweenService:Create(main, TweenInfo.new(0.5, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut), {Position = UDim2.new(0.5,-250,0,-500)}):Play()
 	end)
 	local inviteButton = main:FindFirstChild("InviteButton",true)
 	local lastPress = nil
@@ -2915,7 +2929,7 @@ reference = (function()
 	main.Parent = ScaledHolder
 
 	ReferenceButton.MouseButton1Click:Connect(function()
-		TweenService:Create(main, TweenInfo.new(0.5, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut), {Position = UDim2.new(0.5,-250,0.5,-150)}):Play(), true, nil)
+		TweenService:Create(main, TweenInfo.new(0.5, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut), {Position = UDim2.new(0.5,-250,0.5,-150)}):Play()
 	end)
 end)()
 
@@ -2974,7 +2988,8 @@ function createPopup(title, text)
 	local Exit = Instance.new("TextButton")
 	local ExitImage = Instance.new("ImageLabel")
 
-	Popup.Name = randomString()
+	-- IY_NAME: was randomString()
+	Popup.Name = "IYPopup"
 	Popup.Parent = ScaledHolder
 	Popup.Active = true
 	Popup.BackgroundTransparency = 1
@@ -3040,10 +3055,10 @@ function createPopup(title, text)
 	ExitImage.Image = getcustomasset("infiniteyield/assets/close.png")
 	ExitImage.ZIndex = 10
 
-	TweenService:Create(Popup, TweenInfo.new(0.5, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut), {Position = UDim2.new(0.5, -180, 0, 150)}):Play(), true, nil)
+	TweenService:Create(Popup, TweenInfo.new(0.5, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut), {Position = UDim2.new(0.5, -180, 0, 150)}):Play()
 
 	Exit.MouseButton1Click:Connect(function()
-		TweenService:Create(Popup, TweenInfo.new(0.5, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut), {Position = UDim2.new(0.5, -180, 0, -500)}):Play(), true, nil)
+		TweenService:Create(Popup, TweenInfo.new(0.5, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut), {Position = UDim2.new(0.5, -180, 0, -500)}):Play()
 		task.wait(0.6)
 		Popup:Destroy()
 	end)
@@ -3211,20 +3226,20 @@ end
 
 function maximizeHolder()
 	if StayOpen == false then
-		TweenService:Create(Holder, TweenInfo.new(0.2, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut), {Position = UDim2.new(1, Holder.Position.X.Offset, 1, -220)}):Play(), true, nil)
+		TweenService:Create(Holder, TweenInfo.new(0.2, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut), {Position = UDim2.new(1, Holder.Position.X.Offset, 1, -220)}):Play()
 	end
 end
 
 minimizeNum = -20
 function minimizeHolder()
 	if StayOpen == false then
-		TweenService:Create(Holder, TweenInfo.new(0.5, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut), {Position = UDim2.new(1, Holder.Position.X.Offset, 1, minimizeNum)}):Play(), true, nil)
+		TweenService:Create(Holder, TweenInfo.new(0.5, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut), {Position = UDim2.new(1, Holder.Position.X.Offset, 1, minimizeNum)}):Play()
 	end
 end
 
 function cmdbarHolder()
 	if StayOpen == false then
-		TweenService:Create(Holder, TweenInfo.new(0.5, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut), {Position = UDim2.new(1, Holder.Position.X.Offset, 1, -45)}):Play(), true, nil)
+		TweenService:Create(Holder, TweenInfo.new(0.5, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut), {Position = UDim2.new(1, Holder.Position.X.Offset, 1, -45)}):Play()
 	end
 end
 
@@ -3245,7 +3260,7 @@ function notify(text,text2,length)
 				Title_2.BackgroundTransparency = 0
 			end)
 		end)
-		TweenService:Create(Notification, TweenInfo.new(0.5, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut), {Position = UDim2.new(1, Notification.Position.X.Offset, 1, 0)}):Play(), true, nil)
+		TweenService:Create(Notification, TweenInfo.new(0.5, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut), {Position = UDim2.new(1, Notification.Position.X.Offset, 1, 0)}):Play()
 		task.wait(0.6)
 		local closepressed = false
 		if text2 then
@@ -3255,9 +3270,9 @@ function notify(text,text2,length)
 			Title_2.Text = 'Notification'
 			Text_2.Text = text
 		end
-		TweenService:Create(Notification, TweenInfo.new(0.5, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut), {Position = UDim2.new(1, Notification.Position.X.Offset, 1, -100)}):Play(), true, nil)
+		TweenService:Create(Notification, TweenInfo.new(0.5, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut), {Position = UDim2.new(1, Notification.Position.X.Offset, 1, -100)}):Play()
 		CloseButton.MouseButton1Click:Connect(function()
-			TweenService:Create(Notification, TweenInfo.new(0.5, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut), {Position = UDim2.new(1, Notification.Position.X.Offset, 1, 0)}):Play(), true, nil)
+			TweenService:Create(Notification, TweenInfo.new(0.5, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut), {Position = UDim2.new(1, Notification.Position.X.Offset, 1, 0)}):Play()
 			closepressed = true
 			pinNotification:Disconnect()
 		end)
@@ -3269,7 +3284,7 @@ function notify(text,text2,length)
 		if LnotifyCount == notifyCount then
 			if closepressed == false and notificationPinned == false then
 				pinNotification:Disconnect()
-				TweenService:Create(Notification, TweenInfo.new(0.5, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut), {Position = UDim2.new(1, Notification.Position.X.Offset, 1, 0)}):Play(), true, nil)
+				TweenService:Create(Notification, TweenInfo.new(0.5, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut), {Position = UDim2.new(1, Notification.Position.X.Offset, 1, 0)}):Play()
 			end
 			notifyCount = 0
 		end
@@ -3335,13 +3350,15 @@ function CreateJoinLabel(plr,ID)
 	local info1 = Instance.new("TextLabel")
 	local info2 = Instance.new("TextLabel")
 	local ImageLabel_3 = Instance.new("ImageLabel")
-	infoFrame.Name = randomString()
+	-- IY_NAME: was randomString()
+	infoFrame.Name = "IYJoinLogEntry"
 	infoFrame.Parent = scroll_3
 	infoFrame.BackgroundColor3 = Color3.new(1, 1, 1)
 	infoFrame.BackgroundTransparency = 1
 	infoFrame.BorderColor3 = Color3.new(0.105882, 0.164706, 0.207843)
 	infoFrame.Size = UDim2.new(1, 0, 0, 50)
-	info1.Name = randomString()
+	-- IY_NAME: was randomString()
+	info1.Name = "IYJoinLogPlayerName"
 	info1.Parent = infoFrame
 	info1.BackgroundTransparency = 1
 	info1.BorderSizePixel = 0
@@ -3354,7 +3371,8 @@ function CreateJoinLabel(plr,ID)
 	info1.TextColor3 = Color3.new(1, 1, 1)
 	info1.TextWrapped = true
 	info1.TextXAlignment = Enum.TextXAlignment.Left
-	info2.Name = randomString()
+	-- IY_NAME: was randomString()
+	info2.Name = "IYJoinLogPlayerDetails"
 	info2.Parent = infoFrame
 	info2.BackgroundTransparency = 1
 	info2.BorderSizePixel = 0
@@ -3457,7 +3475,8 @@ ColorsButton.MouseButton1Click:Connect(function()
 	if not colorpickerOpen then
 		colorpickerOpen = true
 		picker = game:GetObjects("rbxassetid://4908465318")[1]
-		picker.Name = randomString()
+		-- IY_NAME: was randomString()
+		picker.Name = "IYColorPicker"
 		picker.Parent = ScaledHolder
 
 		local ColorPicker do
@@ -3832,7 +3851,7 @@ ColorsButton.MouseButton1Click:Connect(function()
 				defaultButton.InputEnded:Connect(function(input) if input.UserInputType == Enum.UserInputType.MouseMovement then defaultButton.BackgroundTransparency = 0 end end)
 
 				pickerExit.MouseButton1Click:Connect(function()
-					TweenService:Create(picker, TweenInfo.new(0.5, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut), {Position = UDim2.new(0.5, -219, 0, -500)}):Play(), true, nil)
+					TweenService:Create(picker, TweenInfo.new(0.5, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut), {Position = UDim2.new(0.5, -219, 0, -500)}):Play()
 				end)
 
 				updateColor()
@@ -3847,7 +3866,7 @@ ColorsButton.MouseButton1Click:Connect(function()
 			end
 		end
 
-		TweenService:Create(picker, TweenInfo.new(0.5, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut), {Position = UDim2.new(0.5, -219, 0, 100)}):Play(), true, nil)
+		TweenService:Create(picker, TweenInfo.new(0.5, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut), {Position = UDim2.new(0.5, -219, 0, 100)}):Play()
 
 		local Npicker = ColorPicker.new()
 		Npicker.Confirm = function(self,color,ctype) updateColors(color,ctype) task.wait() updatesaves() end
@@ -3872,18 +3891,18 @@ ColorsButton.MouseButton1Click:Connect(function()
 			updatesaves()
 		end
 	else
-		TweenService:Create(picker, TweenInfo.new(0.5, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut), {Position = UDim2.new(0.5, -219, 0, 100)}):Play(), true, nil)
+		TweenService:Create(picker, TweenInfo.new(0.5, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut), {Position = UDim2.new(0.5, -219, 0, 100)}):Play()
 	end
 end)
 
 
 SettingsButton.MouseButton1Click:Connect(function()
 	if SettingsOpen == false then SettingsOpen = true
-		TweenService:Create(Settings, TweenInfo.new(0.5, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut), {Position = UDim2.new(0, 0, 0, 45)}):Play(), true, nil)
+		TweenService:Create(Settings, TweenInfo.new(0.5, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut), {Position = UDim2.new(0, 0, 0, 45)}):Play()
 		CMDsF.Visible = false
 	else SettingsOpen = false
 		CMDsF.Visible = true
-		TweenService:Create(Settings, TweenInfo.new(0.5, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut), {Position = UDim2.new(0, 0, 0, 220)}):Play(), true, nil)
+		TweenService:Create(Settings, TweenInfo.new(0.5, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut), {Position = UDim2.new(0, 0, 0, 220)}):Play()
 	end
 end)
 
@@ -4067,40 +4086,40 @@ Players.PlayerRemoving:Connect(function(player)
 end)
 
 Exit.MouseButton1Down:Connect(function()
-	TweenService:Create(logs, TweenInfo.new(0.3, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut), {Position = UDim2.new(0, 0, 1, 10)}):Play(), true, nil)
+	TweenService:Create(logs, TweenInfo.new(0.3, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut), {Position = UDim2.new(0, 0, 1, 10)}):Play()
 end)
 
 Hide.MouseButton1Down:Connect(function()
 	if logs.Position ~= UDim2.new(0, 0, 1, -20) then
-		TweenService:Create(logs, TweenInfo.new(0.3, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut), {Position = UDim2.new(0, 0, 1, -20)}):Play(), true, nil)
+		TweenService:Create(logs, TweenInfo.new(0.3, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut), {Position = UDim2.new(0, 0, 1, -20)}):Play()
 	else
-		TweenService:Create(logs, TweenInfo.new(0.3, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut), {Position = UDim2.new(0, 0, 1, -265)}):Play(), true, nil)
+		TweenService:Create(logs, TweenInfo.new(0.3, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut), {Position = UDim2.new(0, 0, 1, -265)}):Play()
 	end
 end)
 
 EventBind.MouseButton1Click:Connect(function()
-	TweenService:Create(eventEditor.Frame, TweenInfo.new(0.5, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut), {Position = UDim2.new(0.5,-175,0.5,-101)}):Play(), true, nil)
+	TweenService:Create(eventEditor.Frame, TweenInfo.new(0.5, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut), {Position = UDim2.new(0.5,-175,0.5,-101)}):Play()
 end)
 
 Keybinds.MouseButton1Click:Connect(function()
-	TweenService:Create(KeybindsFrame, TweenInfo.new(0.5, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut), {Position = UDim2.new(0, 0, 0, 0)}):Play(), true, nil)
+	TweenService:Create(KeybindsFrame, TweenInfo.new(0.5, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut), {Position = UDim2.new(0, 0, 0, 0)}):Play()
 	task.wait(0.5)
 	SettingsHolder.Visible = false
 end)
 
 Close.MouseButton1Click:Connect(function()
 	SettingsHolder.Visible = true
-	TweenService:Create(KeybindsFrame, TweenInfo.new(0.5, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut), {Position = UDim2.new(0, 0, 0, 175)}):Play(), true, nil)
+	TweenService:Create(KeybindsFrame, TweenInfo.new(0.5, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut), {Position = UDim2.new(0, 0, 0, 175)}):Play()
 end)
 
 Keybinds.MouseButton1Click:Connect(function()
-	TweenService:Create(KeybindsFrame, TweenInfo.new(0.5, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut), {Position = UDim2.new(0, 0, 0, 0)}):Play(), true, nil)
+	TweenService:Create(KeybindsFrame, TweenInfo.new(0.5, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut), {Position = UDim2.new(0, 0, 0, 0)}):Play()
 	task.wait(0.5)
 	SettingsHolder.Visible = false
 end)
 
 Add.MouseButton1Click:Connect(function()
-	TweenService:Create(KeybindEditor, TweenInfo.new(0.5, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut), {Position = UDim2.new(0.5, -180, 0, 260)}):Play(), true, nil)
+	TweenService:Create(KeybindEditor, TweenInfo.new(0.5, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut), {Position = UDim2.new(0.5, -180, 0, 260)}):Play()
 end)
 
 Delete.MouseButton1Click:Connect(function()
@@ -4112,34 +4131,36 @@ end)
 
 Close_2.MouseButton1Click:Connect(function()
 	SettingsHolder.Visible = true
-	TweenService:Create(AliasesFrame, TweenInfo.new(0.5, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut), {Position = UDim2.new(0, 0, 0, 175)}):Play(), true, nil)
+	TweenService:Create(AliasesFrame, TweenInfo.new(0.5, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut), {Position = UDim2.new(0, 0, 0, 175)}):Play()
 end)
 
 Aliases.MouseButton1Click:Connect(function()
-	TweenService:Create(AliasesFrame, TweenInfo.new(0.5, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut), {Position = UDim2.new(0, 0, 0, 0)}):Play(), true, nil)
+	TweenService:Create(AliasesFrame, TweenInfo.new(0.5, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut), {Position = UDim2.new(0, 0, 0, 0)}):Play()
 	task.wait(0.5)
 	SettingsHolder.Visible = false
 end)
 
 Close_3.MouseButton1Click:Connect(function()
 	SettingsHolder.Visible = true
-	TweenService:Create(PositionsFrame, TweenInfo.new(0.5, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut), {Position = UDim2.new(0, 0, 0, 175)}):Play(), true, nil)
+	TweenService:Create(PositionsFrame, TweenInfo.new(0.5, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut), {Position = UDim2.new(0, 0, 0, 175)}):Play()
 end)
 
 Positions.MouseButton1Click:Connect(function()
-	TweenService:Create(PositionsFrame, TweenInfo.new(0.5, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut), {Position = UDim2.new(0, 0, 0, 0)}):Play(), true, nil)
+	TweenService:Create(PositionsFrame, TweenInfo.new(0.5, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut), {Position = UDim2.new(0, 0, 0, 0)}):Play()
 	task.wait(0.5)
 	SettingsHolder.Visible = false
 end)
 
 local selectionBox = Instance.new("SelectionBox")
-selectionBox.Name = randomString()
+-- IY_NAME: was randomString()
+selectionBox.Name = "IYPartSelectHighlight"
 selectionBox.Color3 = Color3.new(255,255,255)
 selectionBox.Adornee = nil
 selectionBox.Parent = PARENT
 
 local selected = Instance.new("SelectionBox")
-selected.Name = randomString()
+-- IY_NAME: was randomString()
+selected.Name = "IYSelectedHighlight"
 selected.Color3 = Color3.new(0,166,0)
 selected.Adornee = nil
 selected.Parent = PARENT
@@ -4147,7 +4168,7 @@ selected.Parent = PARENT
 local ActivateHighlight = nil
 local ClickSelect = nil
 function selectPart()
-	TweenService:Create(ToPartFrame, TweenInfo.new(0.5, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut), {Position = UDim2.new(0.5, -180, 0, 335)}):Play(), true, nil)
+	TweenService:Create(ToPartFrame, TweenInfo.new(0.5, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut), {Position = UDim2.new(0.5, -180, 0, 335)}):Play()
 	local function HighlightPart()
 		if selected.Adornee ~= IYMouse.Target then
 			selectionBox.Adornee = IYMouse.Target
@@ -4170,7 +4191,7 @@ Part.MouseButton1Click:Connect(function()
 end)
 
 Exit_4.MouseButton1Click:Connect(function()
-	TweenService:Create(ToPartFrame, TweenInfo.new(0.5, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut), {Position = UDim2.new(0.5, -180, 0, -500)}):Play(), true, nil)
+	TweenService:Create(ToPartFrame, TweenInfo.new(0.5, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut), {Position = UDim2.new(0.5, -180, 0, -500)}):Play()
 	if ActivateHighlight then
 		ActivateHighlight:Disconnect()
 	end
@@ -4243,8 +4264,8 @@ end
 
 function UpdateToViewport()
 	if Holder.Position.X.Offset < -CamViewport() then
-		TweenService:Create(Holder, TweenInfo.new(0.04, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut), {Position = UDim2.new(1, -CamViewport(), Holder.Position.Y.Scale, Holder.Position.Y.Offset)}):Play(), true, nil)
-		TweenService:Create(Notification, TweenInfo.new(0.04, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut), {Position = UDim2.new(1, -CamViewport() + 250, Notification.Position.Y.Scale, Notification.Position.Y.Offset)}):Play(), true, nil)
+		TweenService:Create(Holder, TweenInfo.new(0.04, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut), {Position = UDim2.new(1, -CamViewport(), Holder.Position.Y.Scale, Holder.Position.Y.Offset)}):Play()
+		TweenService:Create(Notification, TweenInfo.new(0.04, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut), {Position = UDim2.new(1, -CamViewport() + 250, Notification.Position.Y.Scale, Notification.Position.Y.Offset)}):Play()
 	end
 end
 CameraChanged = workspace.CurrentCamera:GetPropertyChangedSignal("ViewportSize"):Connect(UpdateToViewport)
@@ -4288,7 +4309,7 @@ function dragMain(dragpoint,gui)
 				local Position = UDim2.new(1, -250, gui.Position.Y.Scale, gui.Position.Y.Offset)
 				TweenService:Create(gui, TweenInfo.new(.20), {Position = Position}):Play()
 			elseif -CamViewport() > startPos.X.Offset + delta.X then
-				TweenService:Create(gui, TweenInfo.new(0.04, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut), {Position = UDim2.new(1, -CamViewport(), gui.Position.Y.Scale, gui.Position.Y.Offset)}):Play(), true, nil)
+				TweenService:Create(gui, TweenInfo.new(0.04, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut), {Position = UDim2.new(1, -CamViewport(), gui.Position.Y.Scale, gui.Position.Y.Offset)}):Play()
 				local Position = UDim2.new(1, -CamViewport(), gui.Position.Y.Scale, gui.Position.Y.Offset)
 				TweenService:Create(gui, TweenInfo.new(.20), {Position = Position}):Play()
 				local Position2 = UDim2.new(1, -CamViewport() + 250, Notification.Position.Y.Scale, Notification.Position.Y.Offset)
@@ -4394,14 +4415,14 @@ task.spawn(function()
 				if SettingsOpen == true then
 					task.wait(0.2)
 					CMDsF.Visible = true
-					TweenService:Create(Settings, TweenInfo.new(0.2, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut), {Position = UDim2.new(0, 0, 0, 220)}):Play(), true, nil)
+					TweenService:Create(Settings, TweenInfo.new(0.2, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut), {Position = UDim2.new(0, 0, 0, 220)}):Play()
 				end
 				IndexContents(PlayerGui.Chat.Frame.ChatBarParentFrame.Frame.BoxFrame.Frame.ChatBar.Text:lower():sub(2),true)
 			else
 				minimizeHolder()
 				if SettingsOpen == true then
 					task.wait(0.2)
-					TweenService:Create(Settings, TweenInfo.new(0.2, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut), {Position = UDim2.new(0, 0, 0, 45)}):Play(), true, nil)
+					TweenService:Create(Settings, TweenInfo.new(0.2, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut), {Position = UDim2.new(0, 0, 0, 45)}):Play()
 					CMDsF.Visible = false
 				end
 			end
@@ -5667,7 +5688,7 @@ Cmdbar.FocusLost:Connect(function(enterpressed)
 		IndexContents('',true,false,true)
 		if SettingsOpen == true then
 			task.wait(0.2)
-			TweenService:Create(Settings, TweenInfo.new(0.2, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut), {Position = UDim2.new(0, 0, 0, 45)}):Play(), true, nil)
+			TweenService:Create(Settings, TweenInfo.new(0.2, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut), {Position = UDim2.new(0, 0, 0, 45)}):Play()
 			CMDsF.Visible = false
 		end
 	end
@@ -5680,7 +5701,7 @@ Cmdbar.Focused:Connect(function()
 	if SettingsOpen == true then
 		task.wait(0.2)
 		CMDsF.Visible = true
-		TweenService:Create(Settings, TweenInfo.new(0.2, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut), {Position = UDim2.new(0, 0, 0, 220)}):Play(), true, nil)
+		TweenService:Create(Settings, TweenInfo.new(0.2, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut), {Position = UDim2.new(0, 0, 0, 220)}):Play()
 	end
 	tabComplete = UserInputService.InputBegan:Connect(function(input,gameProcessed)
 		if Cmdbar:IsFocused() then
@@ -6158,7 +6179,7 @@ Exit_2.MouseButton1Click:Connect(function()
 	bindChosenKeyUp = false
 	BindTriggerSelect.Text = "KeyDown"
 	keySelected = false
-	TweenService:Create(KeybindEditor, TweenInfo.new(0.5, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut), {Position = UDim2.new(0.5, -180, 0, -500)}):Play(), true, nil)
+	TweenService:Create(KeybindEditor, TweenInfo.new(0.5, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut), {Position = UDim2.new(0.5, -180, 0, -500)}):Play()
 end)
 
 function onInputBegan(input,gameProcessed)
@@ -6458,17 +6479,17 @@ AddPlugin.MouseButton1Click:Connect(function()
 end)
 
 Exit_3.MouseButton1Click:Connect(function()
-	TweenService:Create(PluginEditor, TweenInfo.new(0.5, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut), {Position = UDim2.new(0.5, -180, 0, -500)}):Play(), true, nil)
+	TweenService:Create(PluginEditor, TweenInfo.new(0.5, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut), {Position = UDim2.new(0.5, -180, 0, -500)}):Play()
 	FileName.Text = 'Plugin File Name'
 end)
 
 Add_3.MouseButton1Click:Connect(function()
-	TweenService:Create(PluginEditor, TweenInfo.new(0.5, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut), {Position = UDim2.new(0.5, -180, 0, 310)}):Play(), true, nil)
+	TweenService:Create(PluginEditor, TweenInfo.new(0.5, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut), {Position = UDim2.new(0.5, -180, 0, 310)}):Play()
 end)
 
 Plugins.MouseButton1Click:Connect(function()
 	if writefileExploit() then
-		TweenService:Create(PluginsFrame, TweenInfo.new(0.5, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut), {Position = UDim2.new(0, 0, 0, 0)}):Play(), true, nil)
+		TweenService:Create(PluginsFrame, TweenInfo.new(0.5, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut), {Position = UDim2.new(0, 0, 0, 0)}):Play()
 		task.wait(0.5)
 		SettingsHolder.Visible = false
 	else
@@ -6478,7 +6499,7 @@ end)
 
 Close_4.MouseButton1Click:Connect(function()
 	SettingsHolder.Visible = true
-	TweenService:Create(PluginsFrame, TweenInfo.new(0.5, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut), {Position = UDim2.new(0, 0, 0, 175)}):Play(), true, nil)
+	TweenService:Create(PluginsFrame, TweenInfo.new(0.5, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut), {Position = UDim2.new(0, 0, 0, 175)}):Play()
 end)
 
 local TeleportCheck = false
@@ -6609,7 +6630,8 @@ addcmd('serverinfo',{'info','sinfo'},function(args, speaker)
 		local CopyPlcID = Instance.new("TextButton")
 		local CopyPlcName = Instance.new("TextButton")
 
-		FRAME.Name = randomString()
+		-- IY_NAME: was randomString()
+		FRAME.Name = "IYServerInfo"
 		FRAME.Parent = ScaledHolder
 		FRAME.Active = true
 		FRAME.BackgroundTransparency = 1
@@ -6863,10 +6885,10 @@ addcmd('serverinfo',{'info','sinfo'},function(args, speaker)
 		table.insert(text1,CopyPlcName)
 
 		local SINFOGUI = background
-		TweenService:Create(FRAME, TweenInfo.new(0.5, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut), {Position = UDim2.new(0.5, -130, 0, 100)}):Play(), true, nil) 
+		TweenService:Create(FRAME, TweenInfo.new(0.5, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut), {Position = UDim2.new(0.5, -130, 0, 100)}):Play() 
 		task.wait(0.5)
 		Exit.MouseButton1Click:Connect(function()
-			TweenService:Create(FRAME, TweenInfo.new(0.5, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut), {Position = UDim2.new(0.5, -130, 0, -500)}):Play(), true, nil) 
+			TweenService:Create(FRAME, TweenInfo.new(0.5, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut), {Position = UDim2.new(0.5, -130, 0, -500)}):Play() 
 			task.wait(0.6)
 			FRAME:Destroy()
 			canOpenServerinfo = true
@@ -7489,13 +7511,13 @@ end)
 
 addcmd('waypoints',{'positions'},function(args, speaker)
 	if SettingsOpen == false then SettingsOpen = true
-		TweenService:Create(Settings, TweenInfo.new(0.5, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut), {Position = UDim2.new(0, 0, 0, 45)}):Play(), true, nil)
+		TweenService:Create(Settings, TweenInfo.new(0.5, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut), {Position = UDim2.new(0, 0, 0, 45)}):Play()
 		CMDsF.Visible = false
 	end
-	TweenService:Create(KeybindsFrame, TweenInfo.new(0.5, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut), {Position = UDim2.new(0, 0, 0, 175)}):Play(), true, nil)
-	TweenService:Create(AliasesFrame, TweenInfo.new(0.5, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut), {Position = UDim2.new(0, 0, 0, 175)}):Play(), true, nil)
-	TweenService:Create(PluginsFrame, TweenInfo.new(0.5, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut), {Position = UDim2.new(0, 0, 0, 175)}):Play(), true, nil)
-	TweenService:Create(PositionsFrame, TweenInfo.new(0.5, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut), {Position = UDim2.new(0, 0, 0, 0)}):Play(), true, nil)
+	TweenService:Create(KeybindsFrame, TweenInfo.new(0.5, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut), {Position = UDim2.new(0, 0, 0, 175)}):Play()
+	TweenService:Create(AliasesFrame, TweenInfo.new(0.5, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut), {Position = UDim2.new(0, 0, 0, 175)}):Play()
+	TweenService:Create(PluginsFrame, TweenInfo.new(0.5, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut), {Position = UDim2.new(0, 0, 0, 175)}):Play()
+	TweenService:Create(PositionsFrame, TweenInfo.new(0.5, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut), {Position = UDim2.new(0, 0, 0, 0)}):Play()
 	task.wait(0.5)
 	SettingsHolder.Visible = false
 	maximizeHolder()
@@ -8744,7 +8766,8 @@ addcmd("btools", {}, function(args, speaker)
 	for i = 1, 4 do
 		local Tool = Instance.new("HopperBin")
 		Tool.BinType = i
-		Tool.Name = randomString()
+		-- IY_NAME: was randomString()
+		Tool.Name = "IYBtool"
 		Tool.Parent = speaker:FindFirstChildWhichIsA("Backpack")
 	end
 end)
@@ -11174,8 +11197,12 @@ addcmd('hatspin',{'spinhats'},function(args, speaker)
 	execCmd('unhatspin')
 	task.wait(.5)
 	for _,v in ipairs(speaker.Character:FindFirstChildOfClass('Humanoid'):GetAccessories()) do
-		local keep = Instance.new("BodyPosition") keep.Name = randomString() keep.Parent = v.Handle
-		local spin = Instance.new("BodyAngularVelocity") spin.Name = randomString() spin.Parent = v.Handle
+		local keep = Instance.new("BodyPosition") -- IY_NAME: was randomString()
+		keep.Name = "IYHatspinPosition"
+		keep.Parent = v.Handle
+		local spin = Instance.new("BodyAngularVelocity") -- IY_NAME: was randomString()
+		spin.Name = "IYHatspinVelocity"
+		spin.Parent = v.Handle
 		v.Handle:FindFirstChildOfClass("Weld"):Destroy()
 		if args[1] then
 			spin.AngularVelocity = Vector3.new(0, args[1], 0)
@@ -11669,7 +11696,7 @@ addcmd("logs", {}, function(args, speaker)
 	jLogsEnabled = true
 	Toggle.Text = "Enabled"
 	Toggle_2.Text = "Enabled"
-	TweenService:Create(logs, TweenInfo.new(0.3, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut), {Position = UDim2.new(0, 0, 1, -265)}):Play(), true, nil)
+	TweenService:Create(logs, TweenInfo.new(0.3, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut), {Position = UDim2.new(0, 0, 1, -265)}):Play()
 end)
 
 addcmd("chatlogs", {"clogs"}, function(args, speaker)
@@ -11683,7 +11710,7 @@ addcmd("chatlogs", {"clogs"}, function(args, speaker)
 	selectJoin.BackgroundColor3 = currentShade3
 	selectChat.BackgroundColor3 = currentShade2
 	Toggle.Text = "Enabled"
-	TweenService:Create(logs, TweenInfo.new(0.3, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut), {Position = UDim2.new(0, 0, 1, -265)}):Play(), true, nil)
+	TweenService:Create(logs, TweenInfo.new(0.3, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut), {Position = UDim2.new(0, 0, 1, -265)}):Play()
 end)
 
 addcmd("joinlogs", {"jlogs"}, function(args, speaker)
@@ -11697,7 +11724,7 @@ addcmd("joinlogs", {"jlogs"}, function(args, speaker)
 	selectChat.BackgroundColor3 = currentShade3
 	selectJoin.BackgroundColor3 = currentShade2
 	Toggle_2.Text = "Enabled"
-	TweenService:Create(logs, TweenInfo.new(0.3, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut), {Position = UDim2.new(0, 0, 1, -265)}):Play(), true, nil)
+	TweenService:Create(logs, TweenInfo.new(0.3, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut), {Position = UDim2.new(0, 0, 1, -265)}):Play()
 end)
 
 addcmd("chatlogswebhook", {"logswebhook"}, function(args, speaker)
@@ -11719,7 +11746,8 @@ addcmd('fling',{},function(args, speaker)
 	execCmd('noclip')
 	task.wait(.1)
 	local bambam = Instance.new("BodyAngularVelocity")
-	bambam.Name = randomString()
+	-- IY_NAME: was randomString()
+	bambam.Name = "IYBambamVelocity"
 	bambam.Parent = getRoot(speaker.Character)
 	bambam.AngularVelocity = Vector3.new(0,99999,0)
 	bambam.MaxTorque = Vector3.new(0,math.huge,0)
@@ -12225,7 +12253,8 @@ addcmd('hovername',{},function(args, speaker)
 	execCmd('unhovername')
 	task.wait()
 	nameBox = Instance.new("TextLabel")
-	nameBox.Name = randomString()
+	-- IY_NAME: was randomString()
+	nameBox.Name = "IYHoverNameLabel"
 	nameBox.Parent = ScaledHolder
 	nameBox.BackgroundTransparency = 1
 	nameBox.Size = UDim2.new(0,200,0,30)
@@ -12237,7 +12266,8 @@ addcmd('hovername',{},function(args, speaker)
 	nameBox.TextXAlignment = Enum.TextXAlignment.Left
 	nameBox.ZIndex = 10
 	nbSelection = Instance.new('SelectionBox')
-	nbSelection.Name = randomString()
+	-- IY_NAME: was randomString()
+	nbSelection.Name = "IYHoverNameSelection"
 	nbSelection.LineThickness = 0.03
 	nbSelection.Color3 = Color3.new(1, 1, 1)
 	local function updateNameBox()
@@ -13042,7 +13072,8 @@ end)
 if IsOnMobile then
 	local QuickCapture = Instance.new("TextButton")
 	local UICorner = Instance.new("UICorner")
-	QuickCapture.Name = randomString()
+	-- IY_NAME: was randomString()
+	QuickCapture.Name = "IYQuickCapture"
 	QuickCapture.Parent = PARENT
 	QuickCapture.BackgroundColor3 = Color3.fromRGB(46, 46, 47)
 	QuickCapture.BackgroundTransparency = 0.14
@@ -13055,7 +13086,8 @@ if IsOnMobile then
 	QuickCapture.TextWrapped = true
 	QuickCapture.ZIndex = 10
 	QuickCapture.Draggable = true
-	UICorner.Name = randomString()
+	-- IY_NAME: was randomString()
+	UICorner.Name = "IYQuickCaptureCorner"
 	UICorner.CornerRadius = UDim.new(0.5, 0)
 	UICorner.Parent = QuickCapture
 	QuickCapture.MouseButton1Click:Connect(function()
@@ -13249,7 +13281,8 @@ task.spawn(function()
 			local Exit = Instance.new("TextButton")
 			local ExitImage = Instance.new("ImageLabel")
 
-			AnnGUI.Name = randomString()
+			-- IY_NAME: was randomString()
+			AnnGUI.Name = "IYAnnouncementPopup"
 			AnnGUI.Parent = ScaledHolder
 			AnnGUI.Active = true
 			AnnGUI.BackgroundTransparency = 1
@@ -13314,10 +13347,10 @@ task.spawn(function()
 			ExitImage.ZIndex = 10
 
 			task.wait(1)
-			TweenService:Create(AnnGUI, TweenInfo.new(0.5, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut), {Position = UDim2.new(0.5, -180, 0, 150)}):Play(), true, nil)
+			TweenService:Create(AnnGUI, TweenInfo.new(0.5, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut), {Position = UDim2.new(0.5, -180, 0, 150)}):Play()
 
 			Exit.MouseButton1Click:Connect(function()
-				TweenService:Create(AnnGUI, TweenInfo.new(0.5, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut), {Position = UDim2.new(0.5, -180, 0, -500)}):Play(), true, nil)
+				TweenService:Create(AnnGUI, TweenInfo.new(0.5, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut), {Position = UDim2.new(0.5, -180, 0, -500)}):Play()
 				task.wait(0.6)
 				AnnGUI:Destroy()
 			end)
