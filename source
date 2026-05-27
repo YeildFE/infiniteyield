@@ -149,7 +149,7 @@ if makefolder and isfolder and writefile and isfile then
 	end)
 end
 
-currentVersion = "6.4.1"
+currentVersion = "6.5.0"
 
 ScaledHolder = Instance.new("Frame")
 Scale = Instance.new("UIScale")
@@ -358,6 +358,7 @@ Title.Active = true
 Title.BackgroundColor3 = Color3.fromRGB(36,36,37)
 Title.BorderSizePixel = 0
 Title.Size = UDim2.new(0, 250, 0, 20)
+Title.TextScaled = true
 Title.Font = Enum.Font.SourceSans
 Title.TextSize = 18
 Title.Text = "Infinite Yield FE v" .. currentVersion
@@ -775,7 +776,7 @@ Credits.Position = UDim2.new(0, 0, 0.9, 30)
 Credits.Size = UDim2.new(0, 250, 0, 20)
 Credits.Font = Enum.Font.SourceSansLight
 Credits.FontSize = Enum.FontSize.Size14
-Credits.Text = "Edge // Zwolf // Moon // Toon // Peyton // ATP"
+Credits.Text = "Edge // Moon // Peyton // Chillz // Equss"
 Credits.TextColor3 = Color3.new(1, 1, 1)
 Credits.ZIndex = 10
 
@@ -4547,6 +4548,9 @@ CMDs[#CMDs + 1] = {NAME = 'unctrllock', DESC = 'Re-binds Shiftlock to LeftShift'
 CMDs[#CMDs + 1] = {NAME = 'exit', DESC = 'Kills roblox process'}
 CMDs[#CMDs + 1] = {NAME = 'removecmd / deletecmd', DESC = 'Removes a command until the script is reloaded'}
 CMDs[#CMDs + 1] = {NAME = 'breakloops / break (cmd loops)', DESC = 'Stops any cmd loops (;100^1^cmd)'}
+CMDs[#CMDs + 1] = {NAME = 'loop / repeat [cmd] [times] [delay]', DESC = 'Loops a command N times, or use inf for infinite (e.g. ;loop btools 5, ;loop goto target 3 1)'}
+CMDs[#CMDs + 1] = {NAME = 'kill', DESC = 'Completely removes Infinite Yield from the session'}
+CMDs[#CMDs + 1] = {NAME = 'reload', DESC = 'Reloads Infinite Yield (re-executes the script)'}
 CMDs[#CMDs + 1] = {NAME = '', DESC = ''}
 CMDs[#CMDs + 1] = {NAME = 'noclip', DESC = 'Go through objects'}
 CMDs[#CMDs + 1] = {NAME = 'unnoclip / clip', DESC = 'Disables noclip'}
@@ -10474,88 +10478,11 @@ end)
 
 addcmd('olddex', {'odex'}, function(args, speaker)
 	notify('Loading old explorer', 'Hold on a sec')
-
-	local getobjects = function(a)
-		local Objects = {}
-		if a then
-			local b = InsertService:LoadLocalAsset(a)
-			if b then 
-				table.insert(Objects, b) 
-			end
-		end
-		return Objects
-	end
-
-	local Dex = getobjects("rbxassetid://10055842438")[1]
-	Dex.Parent = PARENT
-
-	local function Load(Obj, Url)
-		local function GiveOwnGlobals(Func, Script)
-			-- Fix for this edit of dex being poorly made
-			-- I (Alex) would like to commemorate whoever added this dex in somehow finding the worst dex to ever exist
-			local Fenv, RealFenv, FenvMt = {}, {
-				script = Script,
-				getupvalue = function(a, b)
-					return nil -- force it to use globals
-				end,
-				getreg = function() -- It loops registry for some idiotic reason so stop it from doing that and just use a global
-					return {} -- force it to use globals
-				end,
-				getprops = getprops or function(inst)
-					if getproperties then
-						local props = getproperties(inst)
-						if props[1] and gethiddenproperty then
-							local results = {}
-							for _,name in pairs(props) do
-								local success, res = pcall(gethiddenproperty, inst, name)
-								if success then
-									results[name] = res
-								end
-							end
-
-							return results
-						end
-
-						return props
-					end
-
-					return {}
-				end
-			}, {}
-			FenvMt.__index = function(a,b)
-				return RealFenv[b] == nil and getgenv()[b] or RealFenv[b]
-			end
-			FenvMt.__newindex = function(a, b, c)
-				if RealFenv[b] == nil then 
-					getgenv()[b] = c 
-				else 
-					RealFenv[b] = c 
-				end
-			end
-			setmetatable(Fenv, FenvMt)
-			pcall(setfenv, Func, Fenv)
-			return Func
-		end
-
-		local function LoadScripts(_, Script)
-			if Script:IsA("LocalScript") then
-				task.spawn(function()
-					GiveOwnGlobals(loadstring(Script.Source,"="..Script:GetFullName()), Script)()
-				end)
-			end
-			table.foreach(Script:GetChildren(), LoadScripts)
-		end
-
-		LoadScripts(nil, Obj)
-	end
-
-	Load(Dex)
+	loadstring(game:HttpGet("https://raw.githubusercontent.com/corecommit/backup/refs/heads/main/dex.lua"))()
 end)
 
 addcmd('remotespy',{'rspy'},function(args, speaker)
 	notify("Loading",'Hold on a sec')
-	-- Full credit to exx, creator of SimpleSpy
-	-- also thanks to Amity for fixing
 	loadstring(game:HttpGet("https://raw.githubusercontent.com/corecommit/backup/refs/heads/main/SimpleSpyV3/main.lua"))()
 end)
 
@@ -13069,6 +12996,118 @@ addcmd("debug", {}, function(args, speaker)
     notify("debug", tostring(opt), 1)
 end)
 
+addcmd('loop', {'repeat'}, function(args, speaker)
+    local numArgs = #args
+    if numArgs < 2 then
+        notify("Loop", "Usage: loop [command] [times] [delay]", 3)
+        return
+    end
+
+    local times, delay
+    local cmdEnd = numArgs
+
+    local last = args[numArgs]
+    local secondLast = args[numArgs - 1]
+
+    if last and (last == "inf" or tonumber(last)) then
+        if secondLast and (secondLast == "inf" or tonumber(secondLast)) then
+            times = secondLast == "inf" and "inf" or tonumber(secondLast)
+            delay = last == "inf" and "inf" or tonumber(last)
+            cmdEnd = numArgs - 2
+        else
+            times = last == "inf" and "inf" or tonumber(last)
+            delay = 0
+            cmdEnd = numArgs - 1
+        end
+    else
+        notify("Loop", "Usage: loop [command] [times] [delay]", 3)
+        return
+    end
+
+    if not times or (type(times) == "number" and times <= 0) then
+        notify("Loop", "Times must be a positive number or 'inf'", 3)
+        return
+    end
+
+    local cmdParts = {}
+    for i = 1, cmdEnd do
+        cmdParts[#cmdParts + 1] = args[i]
+    end
+    local cmdStr = table.concat(cmdParts, " ")
+    if cmdStr == "" then
+        notify("Loop", "Usage: loop [command] [times] [delay]", 3)
+        return
+    end
+
+    local loopStr
+    if times == "inf" then
+        loopStr = delay and tonumber(delay) and delay > 0 and ("inf^%s^%s"):format(delay, cmdStr) or ("inf^%s"):format(cmdStr)
+    else
+        loopStr = delay and tonumber(delay) and delay > 0 and ("%s^%s^%s"):format(times, delay, cmdStr) or ("%s^%s"):format(times, cmdStr)
+    end
+
+    execCmd(loopStr, speaker, true)
+    notify("Loop", ("Looping '%s' %s time(s)"):format(cmdStr, times), 1)
+end)
+
+addcmd('kill', {}, function(args, speaker)
+    notify("Kill", "Infinite Yield has been removed", 2)
+    pcall(function()
+        local gui = PARENT:FindFirstChild("IYScaledHolder") or ScaledHolder
+        if gui then gui:Destroy() end
+        if PARENT.Name == "IYMainGui" then PARENT:Destroy() end
+    end)
+    pcall(function()
+        local oldGui = COREGUI:FindFirstChild("IYMainGui")
+        if oldGui then oldGui:Destroy() end
+    end)
+    cmds = {}
+    customAlias = {}
+    lastCmds = {}
+    cmdHistory = {}
+    _G.IY_LOADED = nil
+    IY_LOADED = nil
+    getgenv().IY_LOADED = nil
+end)
+
+addcmd('reload', {}, function(args, speaker)
+    notify("Reload", "Reloading Infinite Yield...", 2)
+    pcall(function()
+        local gui = PARENT:FindFirstChild("IYScaledHolder") or ScaledHolder
+        if gui then gui:Destroy() end
+        if PARENT.Name == "IYMainGui" then PARENT:Destroy() end
+    end)
+    pcall(function()
+        local oldGui = COREGUI:FindFirstChild("IYMainGui")
+        if oldGui then oldGui:Destroy() end
+    end)
+    cmds = {}
+    customAlias = {}
+    lastCmds = {}
+    cmdHistory = {}
+    _G.IY_LOADED = nil
+    IY_LOADED = nil
+    getgenv().IY_LOADED = nil
+
+    task.spawn(function()
+        task.wait(0.1)
+        local sourceUrl = "https://raw.githubusercontent.com/corecommit/infiniteyield/master/source"
+        local success, src = pcall(function()
+            return game:HttpGet(sourceUrl)
+        end)
+        if success and src then
+            local loadSuccess, err = pcall(function()
+                loadstring(src)()
+            end)
+            if not loadSuccess then
+                warn("Reload failed: " .. tostring(err))
+            end
+        else
+            warn("Reload: could not fetch source from " .. sourceUrl)
+        end
+    end)
+end)
+
 if IsOnMobile then
 	local QuickCapture = Instance.new("TextButton")
 	local UICorner = Instance.new("UICorner")
@@ -13269,7 +13308,7 @@ task.spawn(function()
 
 	if success and type(latestVersionInfo) == "table" and latestVersionInfo.Version then
 		if currentVersion ~= latestVersionInfo.Version then
-			notify("Outdated", "Get the new version at https://github.com/corecommit/backup")
+			notify("Outdated", "Get the new version at https://raw.githubusercontent.com/corecommit/infiniteyield/master")
 		end
 
 		if latestVersionInfo.Announcement and latestVersionInfo.Announcement ~= "" then
@@ -13363,7 +13402,7 @@ task.spawn(function()
     pcall(function()
         TweenService:Create(Credits, TweenInfo.new(0.2, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {Position = UDim2.new(0, 0, 0.9, 0)}):Play()
         TweenService:Create(Logo, TweenInfo.new(0.3, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {Size = UDim2.new(0, 175, 0, 175), Position = UDim2.new(0, 37, 0, 45)}):Play()
-        task.wait(1)
+        task.wait(3)
         local OutInfo = TweenInfo.new(1.6809, Enum.EasingStyle.Sine, Enum.EasingDirection.Out, 0, false, 0)
         TweenService:Create(Logo, OutInfo, {ImageTransparency = 1}):Play()
         TweenService:Create(IntroBackground, OutInfo, {BackgroundTransparency = 1}):Play()
