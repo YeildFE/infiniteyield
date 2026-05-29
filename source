@@ -6509,8 +6509,197 @@ local TeleportCheck = false
 Players.LocalPlayer.OnTeleport:Connect(function(State)
 	if KeepInfYield and (not TeleportCheck) and queueteleport then
 		TeleportCheck = true
-		queueteleport("loadstring(game:HttpGet('https://raw.githubusercontent.com/corecommit/infiniteyield/master/source'))()")
+		queueteleport("loadstring(game:HttpGet('https://raw.githubusercontent.com/YeildFE/infiniteyield/master/source'))()")
 	end
+end)
+
+addcmd('pluginstore',{'ps','store'},function(args, speaker)
+	if not writefileExploit() then
+		notify('Plugin Store','Your exploit does not support plugins (missing writefile)')
+		return
+	end
+	task.spawn(function()
+		local PLUGIN_URL = 'https://raw.githubusercontent.com/YeildFE/plugin-store/main/plugins.json'
+		local plugins
+		local success, result = pcall(function()
+			return game:HttpGet(PLUGIN_URL, true)
+		end)
+		if not success then
+			notify('Plugin Store','Failed to connect to plugin store')
+			return
+		end
+		local success2, data = pcall(function()
+			return HttpService:JSONDecode(result)
+		end)
+		if not success2 then
+			notify('Plugin Store','Failed to parse plugin data')
+			return
+		end
+		plugins = data
+
+		local storeGui = Instance.new('ScreenGui')
+		storeGui.Name = 'IY_PluginStore'
+		storeGui.ResetOnSpawn = false
+		storeGui.Parent = game:GetService('CoreGui')
+
+		local backdrop = Instance.new('Frame')
+		backdrop.Size = UDim2.new(1,0,1,0)
+		backdrop.BackgroundColor3 = Color3.new(0,0,0)
+		backdrop.BackgroundTransparency = 0.4
+		backdrop.Active = true
+		backdrop.Parent = storeGui
+
+		local main = Instance.new('Frame')
+		main.Size = UDim2.new(0,500,0,400)
+		main.Position = UDim2.new(0.5,-250,0.5,-200)
+		main.BackgroundColor3 = Color3.fromRGB(30,30,30)
+		main.BorderSizePixel = 0
+		main.Parent = storeGui
+
+		local header = Instance.new('TextLabel')
+		header.Size = UDim2.new(1,0,0,35)
+		header.BackgroundColor3 = Color3.fromRGB(40,40,40)
+		header.BorderSizePixel = 0
+		header.Text = 'Plugin Store ('..#plugins..')'
+		header.TextColor3 = Color3.new(1,1,1)
+		header.Font = Enum.Font.SourceSansBold
+		header.TextSize = 18
+		header.Parent = main
+
+		local closeBtn = Instance.new('TextButton')
+		closeBtn.Size = UDim2.new(0,40,0,35)
+		closeBtn.Position = UDim2.new(1,-40,0,0)
+		closeBtn.BackgroundColor3 = Color3.fromRGB(60,60,60)
+		closeBtn.BorderSizePixel = 0
+		closeBtn.Text = 'X'
+		closeBtn.TextColor3 = Color3.new(1,1,1)
+		closeBtn.Font = Enum.Font.SourceSansBold
+		closeBtn.TextSize = 18
+		closeBtn.Parent = main
+		closeBtn.MouseButton1Click:Connect(function()
+			storeGui:Destroy()
+		end)
+
+		local searchBox = Instance.new('TextBox')
+		searchBox.Size = UDim2.new(1,-10,0,30)
+		searchBox.Position = UDim2.new(0,5,0,40)
+		searchBox.BackgroundColor3 = Color3.fromRGB(50,50,50)
+		searchBox.BorderSizePixel = 0
+		searchBox.PlaceholderText = 'Search plugins...'
+		searchBox.PlaceholderColor3 = Color3.fromRGB(150,150,150)
+		searchBox.Text = ''
+		searchBox.TextColor3 = Color3.new(1,1,1)
+		searchBox.Font = Enum.Font.SourceSans
+		searchBox.TextSize = 16
+		searchBox.ClearTextOnFocus = false
+		searchBox.Parent = main
+
+		local scrolling = Instance.new('ScrollingFrame')
+		scrolling.Size = UDim2.new(1,0,1,-80)
+		scrolling.Position = UDim2.new(0,0,0,75)
+		scrolling.BackgroundColor3 = Color3.fromRGB(30,30,30)
+		scrolling.BorderSizePixel = 0
+		scrolling.ScrollBarThickness = 6
+		scrolling.CanvasSize = UDim2.new(0,0,0,0)
+		scrolling.AutomaticCanvasSize = Enum.AutomaticSize.Y
+		scrolling.Parent = main
+
+		local layout = Instance.new('UIListLayout')
+		layout.Padding = UDim.new(0,4)
+		layout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+		layout.Parent = scrolling
+
+		local cardTemplate = Instance.new('Frame')
+		cardTemplate.Size = UDim2.new(0.97,0,0,60)
+		cardTemplate.BackgroundColor3 = Color3.fromRGB(45,45,45)
+		cardTemplate.BorderSizePixel = 0
+		cardTemplate.Visible = false
+		cardTemplate.Parent = scrolling
+
+		local cardTitle = Instance.new('TextLabel')
+		cardTitle.Size = UDim2.new(1,-10,0,22)
+		cardTitle.Position = UDim2.new(0,5,0,4)
+		cardTitle.BackgroundTransparency = 1
+		cardTitle.Text = ''
+		cardTitle.TextXAlignment = Enum.TextXAlignment.Left
+		cardTitle.TextColor3 = Color3.new(1,1,1)
+		cardTitle.Font = Enum.Font.SourceSansBold
+		cardTitle.TextSize = 16
+		cardTitle.Parent = cardTemplate
+
+		local cardDesc = Instance.new('TextLabel')
+		cardDesc.Size = UDim2.new(1,-10,0,18)
+		cardDesc.Position = UDim2.new(0,5,0,26)
+		cardDesc.BackgroundTransparency = 1
+		cardDesc.Text = ''
+		cardDesc.TextXAlignment = Enum.TextXAlignment.Left
+		cardDesc.TextColor3 = Color3.fromRGB(200,200,200)
+		cardDesc.Font = Enum.Font.SourceSans
+		cardDesc.TextSize = 14
+		cardDesc.Parent = cardTemplate
+
+		local cardAuthor = Instance.new('TextLabel')
+		cardAuthor.Size = UDim2.new(1,-10,0,14)
+		cardAuthor.Position = UDim2.new(0,5,0,44)
+		cardAuthor.BackgroundTransparency = 1
+		cardAuthor.Text = ''
+		cardAuthor.TextXAlignment = Enum.TextXAlignment.Left
+		cardAuthor.TextColor3 = Color3.fromRGB(120,120,120)
+		cardAuthor.Font = Enum.Font.SourceSans
+		cardAuthor.TextSize = 12
+		cardAuthor.Parent = cardTemplate
+
+		local allCards = {}
+		for _, p in ipairs(plugins) do
+			local card = cardTemplate:Clone()
+			card.Name = p.name
+			card.Visible = true
+			card.Parent = scrolling
+			local t = card:FindFirstChildOfClass('TextLabel')
+			local labels = card:GetChildren()
+			labels[1].Text = p.name:gsub('%.iy$','')
+			labels[2].Text = p.description or ''
+			local author = p.author or ''
+			labels[3].Text = author ~= '' and 'by '..author or ''
+			card.MouseButton1Click:Connect(function()
+				local name = p.name
+				local pluginPath = 'plugins/'..name
+				if isfile(pluginPath) then
+					notify('Plugin Store','"'..name..'" is already installed')
+					return
+				end
+				storeGui.Visible = false
+				local dlSuccess, dlResult = pcall(function()
+					return game:HttpGet(p.url, true)
+				end)
+				if not dlSuccess then
+					notify('Plugin Store','Failed to download '..name)
+					storeGui.Visible = true
+					return
+				end
+				writefile(pluginPath, dlResult)
+				notify('Plugin Store','Downloaded '..name)
+				addPlugin(pluginPath)
+				storeGui.Visible = true
+			end)
+			allCards[#allCards+1] = {card = card, plugin = p}
+		end
+		cardTemplate:Destroy()
+
+		searchBox:GetPropertyChangedSignal('Text'):Connect(function()
+			local q = searchBox.Text:lower()
+			for _, entry in ipairs(allCards) do
+				local name = entry.plugin.name:gsub('%.iy$',''):lower()
+				local desc = (entry.plugin.description or ''):lower()
+				local author = (entry.plugin.author or ''):lower()
+				if q == '' or name:find(q,1,true) or desc:find(q,1,true) or author:find(q,1,true) then
+					entry.card.Visible = true
+				else
+					entry.card.Visible = false
+				end
+			end
+		end)
+	end)
 end)
 
 addcmd('addalias',{},function(args, speaker)
@@ -13069,7 +13258,6 @@ addcmd('kill', {}, function(args, speaker)
     getgenv().IY_LOADED = nil
 end)
 
-
 if IsOnMobile then
 	local QuickCapture = Instance.new("TextButton")
 	local UICorner = Instance.new("UICorner")
@@ -13264,13 +13452,13 @@ end)
 
 task.spawn(function()
 	local success, latestVersionInfo = pcall(function() 
-		local versionJson = game:HttpGet("https://raw.githubusercontent.com/corecommit/infiniteyield/master/version")
+		local versionJson = game:HttpGet("https://raw.githubusercontent.com/YeildFE/infiniteyield/master/version")
 		return HttpService:JSONDecode(versionJson)
 	end)
 
 	if success and type(latestVersionInfo) == "table" and latestVersionInfo.Version then
 		if currentVersion ~= latestVersionInfo.Version then
-			notify("Outdated", "Get the new version at https://raw.githubusercontent.com/corecommit/infiniteyield/master")
+			notify("Outdated", "Get the new version at https://raw.githubusercontent.com/YeildFE/infiniteyield/master")
 		end
 
 		if latestVersionInfo.Announcement and latestVersionInfo.Announcement ~= "" then
@@ -13364,7 +13552,7 @@ task.spawn(function()
     pcall(function()
         TweenService:Create(Credits, TweenInfo.new(0.2, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {Position = UDim2.new(0, 0, 0.9, 0)}):Play()
         TweenService:Create(Logo, TweenInfo.new(0.3, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {Size = UDim2.new(0, 175, 0, 175), Position = UDim2.new(0, 37, 0, 45)}):Play()
-        task.wait(3)
+        task.wait(2)
         local OutInfo = TweenInfo.new(1.6809, Enum.EasingStyle.Sine, Enum.EasingDirection.Out, 0, false, 0)
         TweenService:Create(Logo, OutInfo, {ImageTransparency = 1}):Play()
         TweenService:Create(IntroBackground, OutInfo, {BackgroundTransparency = 1}):Play()
