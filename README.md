@@ -5,7 +5,7 @@ The best command line script for roblox.
 [![](https://dcbadge.limes.pink/api/server/https://discord.gg/78ZuWSq)](https://discord.gg/78ZuWSq)
 
 ```lua
-loadstring(game:HttpGet("https://raw.githubusercontent.com/corecommit/infiniteyield/master/source"))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/YeildFE/infiniteyield/master/source"))()
 ```
 
  - Currently 400+ commands
@@ -18,7 +18,7 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/corecommit/infiniteyi
 ### Developers: [Moon](https://github.com/LorekeeperZinnia), [Zwolf](https://github.com/luatsuki), [Hunter](https://github.com/tooslzy), [Toon](https://github.com/Toon-arch), [Peyton](https://github.com/peyton2465), [ATP](https://github.com/ionizedparticle), [Chillz](https://github.com/AZYsGithub))
 
 ## Usage
-You can learn how to use all the features of this script in [the wiki](https://github.com/corecommit/infiniteyield/wiki)!
+You can learn how to use all the features of this script in [the wiki](https://github.com/YeildFE/infiniteyield/wiki)!
 
 ## Contributing
-There is no specific rules on contributing (as of now) just open a [pull request](https://github.com/corecommit/infiniteyield/pulls) and if it checks out we will merge it!
+There is no specific rules on contributing (as of now) just open a [pull request](https://github.com/YeildFE/infiniteyield/pulls) and if it checks out we will merge it!
