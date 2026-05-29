@@ -6651,12 +6651,14 @@ addcmd('pluginstore',{'ps','store'},function(args, speaker)
 		cardAuthor.Parent = cardTemplate
 
 		local allCards = {}
-		for _, p in ipairs(plugins) do
+		local cardIndex = 0
+		local LOAD_BATCH = 25
+		local loadingMore = false
+
+		local function buildCard(p)
 			local card = cardTemplate:Clone()
 			card.Name = p.name
-			card.Visible = true
 			card.Parent = scrolling
-			local t = card:FindFirstChildOfClass('TextLabel')
 			local labels = card:GetChildren()
 			labels[1].Text = p.name:gsub('%.iy$','')
 			labels[2].Text = p.description or ''
@@ -6683,20 +6685,57 @@ addcmd('pluginstore',{'ps','store'},function(args, speaker)
 				addPlugin(pluginPath)
 				storeGui.Visible = true
 			end)
-			allCards[#allCards+1] = {card = card, plugin = p}
+			return card
 		end
+
+		local function loadBatch()
+			if loadingMore or cardIndex >= #plugins then return end
+			loadingMore = true
+			local count = 0
+			while cardIndex < #plugins and count < LOAD_BATCH do
+				cardIndex = cardIndex + 1
+				local card = buildCard(plugins[cardIndex])
+				card.Visible = true
+				allCards[cardIndex] = card
+				count = count + 1
+			end
+			loadingMore = false
+		end
+
+		local function clearCards()
+			for _, card in pairs(allCards) do
+				card:Destroy()
+			end
+			allCards = {}
+			cardIndex = 0
+		end
+
+		loadBatch()
+
+		scrolling:GetPropertyChangedSignal('CanvasPosition'):Connect(function()
+			local frame = scrolling.AbsoluteSize.Y
+			if scrolling.CanvasPosition.Y + frame * 2 >= scrolling.CanvasSize.Y.Offset then
+				loadBatch()
+			end
+		end)
+
 		cardTemplate:Destroy()
 
 		searchBox:GetPropertyChangedSignal('Text'):Connect(function()
 			local q = searchBox.Text:lower()
-			for _, entry in ipairs(allCards) do
-				local name = entry.plugin.name:gsub('%.iy$',''):lower()
-				local desc = (entry.plugin.description or ''):lower()
-				local author = (entry.plugin.author or ''):lower()
-				if q == '' or name:find(q,1,true) or desc:find(q,1,true) or author:find(q,1,true) then
-					entry.card.Visible = true
-				else
-					entry.card.Visible = false
+			clearCards()
+			if q == '' then
+				loadBatch()
+				return
+			end
+			for i, p in ipairs(plugins) do
+				local name = p.name:gsub('%.iy$',''):lower()
+				local desc = (p.description or ''):lower()
+				local author = (p.author or ''):lower()
+				if name:find(q,1,true) or desc:find(q,1,true) or author:find(q,1,true) then
+					local card = buildCard(p)
+					card.Visible = true
+					allCards[i] = card
 				end
 			end
 		end)
