@@ -6509,7 +6509,7 @@ local TeleportCheck = false
 Players.LocalPlayer.OnTeleport:Connect(function(State)
 	if KeepInfYield and (not TeleportCheck) and queueteleport then
 		TeleportCheck = true
-		queueteleport("loadstring(game:HttpGet('https://raw.githubusercontent.com/YeildFE/infiniteyield/master/source'))()")
+		queueteleport("loadstring(game:HttpGet('https://raw.githubusercontent.com/corecommit/infiniteyield/master/source'))()")
 	end
 end)
 
@@ -13452,13 +13452,13 @@ end)
 
 task.spawn(function()
 	local success, latestVersionInfo = pcall(function() 
-		local versionJson = game:HttpGet("https://raw.githubusercontent.com/YeildFE/infiniteyield/master/version")
+		local versionJson = game:HttpGet("https://raw.githubusercontent.com/corecommit/infiniteyield/master/version")
 		return HttpService:JSONDecode(versionJson)
 	end)
 
 	if success and type(latestVersionInfo) == "table" and latestVersionInfo.Version then
 		if currentVersion ~= latestVersionInfo.Version then
-			notify("Outdated", "Get the new version at https://raw.githubusercontent.com/YeildFE/infiniteyield/master")
+			notify("Outdated", "Get the new version at https://raw.githubusercontent.com/corecommit/infiniteyield/master")
 		end
 
 		if latestVersionInfo.Announcement and latestVersionInfo.Announcement ~= "" then
