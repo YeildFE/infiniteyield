@@ -6516,7 +6516,7 @@ end)
 
 addcmd('pluginstore',{'ps','store'},function(args, speaker)
 	if not writefileExploit() then
-		notify('Plugin Store','Your exploit does not support plugins (missing writefile)')
+		notify('Plugin Store', 'Your exploit does not support plugins (missing writefile)')
 		return
 	end
 	task.spawn(function()
