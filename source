@@ -10949,7 +10949,7 @@ end)
 
 addcmd('cobalt',{'cspy'},function(args, speaker)
 	notify("Loading",'Hold on a sec')
-	loadstring(game:HttpGet("loadstring(game:HttpGet("https://github.com/notpoiu/cobalt/releases/latest/download/Cobalt.luau"))()"))()
+	loadstring(game:HttpGet("https://github.com/notpoiu/cobalt/releases/latest/download/Cobalt.luau"))()
 end)
 
 addcmd('audiologger',{'alogger'},function(args, speaker)
