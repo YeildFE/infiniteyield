@@ -1,24 +1,139 @@
-# Infinite Yield
+# Infinite Yield FE v6.5 — Modular Edition
 
 The best command line script for roblox.
-
-[![](https://dcbadge.limes.pink/api/server/https://discord.gg/78ZuWSq)](https://discord.gg/78ZuWSq)
 
 ```lua
 loadstring(game:HttpGet("https://raw.githubusercontent.com/YeildFE/infiniteyield/master/source"))()
 ```
 
- - Currently 400+ commands
- - Open Source
- - 8+ years of development
+The single-file **Infinite Yield** admin script (originally one 13,844-line Lua file,
+~507 KB) split into **28 focused modules** that behave **exactly** like the original.
 
-## Developers
+> **Lossless proof:** the modules concatenated in load order are *byte-identical*
+> to the original source (SHA-256 `4dfe873e…`). Nothing was added, removed,
+> reformatted or reordered — the split only cuts at top-level statement boundaries.
 
-### Creator: [Edge](https://github.com/EdgeIY)
-### Developers: [Moon](https://github.com/LorekeeperZinnia), [Zwolf](https://github.com/luatsuki), [Hunter](https://github.com/tooslzy), [Toon](https://github.com/Toon-arch), [Peyton](https://github.com/peyton2465), [ATP](https://github.com/ionizedparticle))
+---
 
-## Usage
-You can learn how to use all the features of this script in [the wiki](https://github.com/YeildFE/infiniteyield/wiki)!
+## Why this is safe
 
-## Contributing
-There is no specific rules on contributing (as of now) just open a [pull request](https://github.com/YeildFE/infiniteyield/pulls) and if it checks out we will merge it!
+The original script defines almost everything as **globals**, and its top-level
+`local` variables are declared immediately before the code that uses them. The
+split preserves the original file order everywhere, so:
+
+- every `local` is still declared **before** every block that references it
+  (verified programmatically against all **206** declaration→usage edges),
+- no module starts or ends in the middle of a Lua block (verified by a
+  Lua-tokenizer depth check on all 28 files),
+- the loader joins the modules **in order into one chunk**, which reproduces
+  Lua's original chunk-level scoping semantics perfectly.
+
+Commands were **not** reordered: each command file is a contiguous slice of the
+original command block, cut where the source itself changes feature clusters.
+Within each file, commands keep their original relative order.
+
+---
+
+## File map (load order)
+
+| Module | Lines | Contains | Commands |
+|---|---:|---|---|
+| `core/01_environment.lua` | 151 | IY guard, executor shims (missing/cloneref/writefile…), Services, asset bootstrap | — |
+| `core/02_gui_construction.lua` | 1,821 | main GUI tree: Holder, Cmdbar, Settings, Keybinds/Aliases/Plugins windows, intro logo | — |
+| `core/03_ui_framework.lua` | 1,221 | create() widget factory, core utilities (getRoot, toClipboard…), eventEditor, reference viewer, saves | — |
+| `core/04_notifications_ui.lua` | 1,050 | notify(), chat/join log labels, theme color picker, settings & window button wiring, part picker | — |
+| `core/05_command_bar.lua` | 702 | cmds table, command list UI, IndexContents/autoComplete, CMDs display entries | — |
+| `core/06_exec_engine.lua` | 779 | execCmd/addcmd/findCmd/getPlayer/argument parsing, do_exec, command-bar input wiring | — |
+| `core/07_features.lua` | 591 | ESP/CHMS/Locate, keybind editor, waypoint & alias refresh, input handlers, click-TP | — |
+| `core/08_plugins.lua` | 202 | plugin load/save system, plugin editor wiring, OnTeleport guard | — |
+| `commands/01_client_server.lua` | 946 | plugin store, aliases, discord/keepiy, server info & hop, rejoin/exit | 18 commands (`pluginstore`, `addalias`, `removealias`, `clraliases` …) |
+| `commands/02_flying.lua` | 486 | noclip, fly/vfly/cframefly, float, swim | 20 commands (`noclip`, `clip`, `togglenoclip`, `fly` …) |
+| `commands/03_waypoints.lua` | 225 | waypoint creation/management, tween & walk-to-waypoint | 12 commands (`setwaypoint`, `waypointpos`, `waypoints`, `showwaypoints` …) |
+| `commands/04_gui_client.lua` | 326 | coregui toggles, gui hide/delete, screenshots, antikick/antiteleport, volume/fps | 27 commands (`enable`, `disable`, `showguis`, `unshowguis` …) |
+| `commands/05_esp_camera.lua` | 642 | esp/chams/locate, spectate, freecam, camera/fov/zoom controls | 33 commands (`esp`, `espteam`, `noesp`, `esptransparency` …) |
+| `commands/06_workspace.lua` | 167 | delete/btools, invis parts, antiafk, prompts, wallwalk | 21 commands (`unlockws`, `lockws`, `delete`, `deleteclass` …) |
+| `commands/07_player_info.lua` | 156 | account/place info, copy id, render toggles | 18 commands (`age`, `chatage`, `joindate`, `chatjoindate` …) |
+| `commands/08_teleport.lua` | 361 | goto/vehicle tp, bring/loopbring, walkto/pathfind, orbit, freeze/anchor | 20 commands (`goto`, `tweengoto`, `vehiclegoto`, `pulsetp` …) |
+| `commands/09_character.lua` | 570 | reset/respawn/refresh, god, invisibility, jpower/gravity/sit/jump family | 41 commands (`loopoof`, `unloopoof`, `muteboombox`, `unmuteboombox` …) |
+| `commands/10_animation.lua` | 232 | billboard-gui removal, spasm, animation/emote engine | 19 commands (`team`, `nobgui`, `loopnobgui`, `unloopnobgui` …) |
+| `commands/11_tp_movement.lua` | 235 | tppos/offset, click/mouse teleport, walktopos, speed & jumppower loops | 19 commands (`tpposition`, `tweentpposition`, `offset`, `tweenoffset` …) |
+| `commands/12_tools_windows.lua` | 97 | tool inventory, console/explorer/remotespy/audiologger windows | 10 commands (`tools`, `notools`, `deleteselectedtool`, `console` …) |
+| `commands/13_chat_fun.lua` | 310 | loopgoto/headsit, chat/spam/pm, chat windows, blockhead/creeper/bang/carpet/friend | 25 commands (`loopgoto`, `unloopgoto`, `headsit`, `chat` …) |
+| `commands/14_parts_interaction.lua` | 247 | goto part/model, click detectors, proximity prompts, grab/removespecifictool | 21 commands (`bringpart`, `bringpartclass`, `gotopart`, `tweengotopart` …) |
+| `commands/15_lighting_avatar.lua` | 569 | light, copytools, naked/spawn/hatspin, char surgery, dupetools, fullbright, stun/states/reach | 46 commands (`light`, `unlight`, `copytools`, `naked` …) |
+| `commands/16_logs_fling.lua` | 427 | chat/join logs, fling family, kill helpers (attach/kill/bring/teleport) | 20 commands (`logs`, `chatlogs`, `joinlogs`, `chatlogswebhook` …) |
+| `commands/17_visuals_misc.lua` | 281 | spin, xray, walltp, autoclick, hovername, hitbox, stareat | 18 commands (`spin`, `unspin`, `xray`, `unxray` …) |
+| `commands/18_server_watch.lua` | 626 | role/staff watch, terrain/destroyheight/antivoid, guiscale, voice, freezeua, autokeypress | 33 commands (`rolewatch`, `rolewatchstop`, `rolewatchleave`, `staffwatch` …) |
+| `commands/19_plugins_cmd.lua` | 38 | plugin management commands, removecmd | 5 commands (`addplugin`, `removeplugin`, `reloadplugin`, `addallplugins` …) |
+| `core/09_boot.lua` | 386 | boot sequence, late commands (debug/loop/kill), events, announcement & intro | 3 commands (`debug`, `loop`, `kill`) |
+
+**Total:** 13,844 lines across 28 modules, 429 commands.
+
+`tools/manifest.json` records the exact original line range of every module —
+it is the machine-readable version of the table above.
+
+---
+
+## How to run
+
+### Option A — remote (no local files)
+Push this `src/` folder (plus `loader.lua`) to your GitHub repo, then execute:
+
+```lua
+loadstring(game:HttpGet("https://raw.githubusercontent.com/YeildFE/infiniteyield/master/loader.lua"))()
+```
+
+The loader fetches each module from `BASE_REMOTE`
+(`https://raw.githubusercontent.com/YeildFE/infiniteyield/master/src/` by default —
+edit the constant at the top of `loader.lua` if your repo differs).
+
+### Option B — local (offline after first install)
+1. Execute `installer.lua` once (needs `writefile` support). It downloads every
+   module to `infiniteyield/modules/`, installs `loader.lua`, and starts IY.
+2. From then on just run:
+
+```lua
+loadstring(readfile("infiniteyield/loader.lua"))()
+```
+
+The loader always tries **local first**, then falls back to **GitHub** — so you
+can edit any module on disk and your changes take effect immediately.
+
+### Debug mode
+Set `_G.IY_DEBUG = true` before executing the loader to (a) allow re-running IY
+in the same session and (b) print each module as it loads.
+
+---
+
+## How to edit safely
+
+- **Add a command** → put `addcmd('name', {'alias'}, function(args, speaker) … end)`
+  at the top level of the command file that matches its category (any of them
+  works; category files are organizational, not scope boundaries).
+- **Add a helper function** → define it near the commands that use it, in the
+  same file, *above* them.
+- **Top-level `local` variables** are visible from their declaration point to
+  the end of the *joined* chunk. Keep them declared above their users, exactly
+  like the original script does.
+- After heavy edits, rebuild a single file with `tools/rebuild.py --out bundle.lua`
+  to distribute without the loader.
+
+`tools/rebuild.py` can also re-verify the untouched split against the original
+monolith (adjust the `ORIGINAL` path constant if needed).
+
+---
+
+## Package contents
+
+```
+InfiniteYield-Modular/
+├── loader.lua        ← the only file users execute (hybrid local/remote loader)
+├── installer.lua     ← one-time local installer (writefile-capable executors)
+├── README.md
+├── src/
+│   ├── core/         ← environment, GUI, framework, engine, features, plugins, boot
+│   └── commands/     ← 19 command slices, ordered & grouped by feature
+└── tools/
+    ├── manifest.json ← module map: load order, original line ranges, commands
+    └── rebuild.py    ← lossless-verify / single-file bundler
+```
