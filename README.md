@@ -1,11 +1,5 @@
 # Infinite Yield FE v6.5 — Modular Edition
 
-The best command line script for roblox.
-
-```lua
-loadstring(game:HttpGet("https://raw.githubusercontent.com/YeildFE/infiniteyield/master/source"))()
-```
-
 The single-file **Infinite Yield** admin script (originally one 13,844-line Lua file,
 ~507 KB) split into **28 focused modules** that behave **exactly** like the original.
 
