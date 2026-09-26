@@ -68,18 +68,57 @@ local function fetch(name)
         return nil, nil
 end
 
+-- Modules are fetched CONCURRENTLY: the sequential loop paid for 28 separate
+-- network round trips back to back, which is what made loading slow. Each
+-- fetch now runs on its own thread so the requests overlap - total load time
+-- is roughly one round trip instead of 28. Order is preserved by storing into
+-- chunks[i], so table.concat below still produces the original module order.
 local chunks = {}
-for i, name in ipairs(MODULES) do
-        local src, from = fetch(name)
-        if not src then
-                error("[IY loader] failed to load module '" .. name
-                        .. "' (not found in '" .. BASE_LOCAL .. "' and fetch failed)"
-                        .. "\nRun installer.lua once to download all modules locally.", 0)
+local failures = {}
+local pending = #MODULES
+
+local function loadOne(i, name)
+        local ok, src, from = pcall(fetch, name)
+        if ok and src then
+                if _G.IY_DEBUG then
+                        print(("[IY loader] %02d/%d %s (%s)"):format(i, #MODULES, name, from))
+                end
+                chunks[i] = src
+        else
+                failures[i] = name
         end
+        pending = pending - 1
+end
+
+if type(task) == "table" and type(task.spawn) == "function" then
+        local startTime = tick()
+        for i, name in ipairs(MODULES) do
+                task.spawn(loadOne, i, name)
+        end
+        while pending > 0 do task.wait() end
         if _G.IY_DEBUG then
-                print(("[IY loader] %02d/%d %s (%s)"):format(i, #MODULES, name, from))
+                print(("[IY loader] fetched %d modules in %.2fs"):format(#MODULES, tick() - startTime))
         end
-        chunks[#chunks + 1] = src
+else
+        -- no task library: fall back to the old one-by-one behaviour
+        for i, name in ipairs(MODULES) do
+                loadOne(i, name)
+        end
+end
+
+-- anything still missing after the join is reported as failed
+for i, name in ipairs(MODULES) do
+        if chunks[i] == nil then failures[i] = name end
+end
+
+if next(failures) then
+        local firstIdx, firstName = math.huge, nil
+        for i, name in pairs(failures) do
+                if i < firstIdx then firstIdx, firstName = i, name end
+        end
+        error("[IY loader] failed to load module '" .. firstName
+                .. "' (not found in '" .. BASE_LOCAL .. "' and fetch failed)"
+                .. "\nRun installer.lua once to download all modules locally.", 0)
 end
 
 local joined = table.concat(chunks, "\n")
