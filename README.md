@@ -56,7 +56,7 @@ Within each file, commands keep their original relative order.
 |---|---:|---|---|
 | `core/01_environment.lua` | 151 | IY guard, executor shims (missing/cloneref/writefile…), Services, asset bootstrap | — |
 | `core/02_gui_construction.lua` | 1,821 | main GUI tree: Holder, Cmdbar, Settings, Keybinds/Aliases/Plugins windows, intro logo | — |
-| `core/03_ui_framework.lua` | 1,221 | create() widget factory, core utilities (getRoot, toClipboard…), eventEditor, reference viewer, saves | — |
+| `core/03_ui_framework.lua` | 1,263 | create() widget factory, core utilities (getRoot, toClipboard…), eventEditor, reference viewer, saves | — |
 | `core/04_notifications_ui.lua` | 1,052 | notify() (+ the `nonotify` mute guard), chat/join log labels, theme color picker, settings & window button wiring, part picker | — |
 | `core/05_command_bar.lua` | 837 | cmds table, command list UI, IndexContents/autoComplete, CMDs display entries, search index | — |
 | `core/06_exec_engine.lua` | 779 | execCmd/addcmd/findCmd/getPlayer/argument parsing, do_exec, command-bar input wiring | — |
@@ -66,14 +66,14 @@ Within each file, commands keep their original relative order.
 | `commands/02_flying.lua` | 486 | noclip, fly/vfly/cframefly, float, swim | 20 commands (`noclip`, `clip`, `togglenoclip`, `fly` …) |
 | `commands/03_waypoints.lua` | 292 | waypoint creation/management & JSON export/import, tween & walk-to-waypoint | 14 commands (`setwaypoint`, `waypointpos`, `waypoints`, `showwaypoints` …) |
 | `commands/04_gui_client.lua` | 449 | coregui toggles, gui hide/delete, screenshots, antikick/antiteleport, volume/fps, keybinds/prefix/notify mute | 32 commands (`enable`, `disable`, `showguis`, `unshowguis` …) |
-| `commands/05_esp_camera.lua` | 642 | esp/chams/locate, spectate, freecam, camera/fov/zoom controls | 33 commands (`esp`, `espteam`, `noesp`, `esptransparency` …) |
+| `commands/05_esp_camera.lua` | 641 | esp/chams/locate, spectate, freecam, camera/fov/zoom controls | 32 commands (`esp`, `espteam`, `noesp`, `esptransparency` …) |
 | `commands/06_workspace.lua` | 167 | delete/btools, invis parts, antiafk, prompts, wallwalk | 21 commands (`unlockws`, `lockws`, `delete`, `deleteclass` …) |
 | `commands/07_player_info.lua` | 172 | account/place info, copy id, render toggles, perf stats | 19 commands (`age`, `chatage`, `joindate`, `chatjoindate` …) |
 | `commands/08_teleport.lua` | 361 | goto/vehicle tp, bring/loopbring, walkto/pathfind, orbit, freeze/anchor | 20 commands (`goto`, `tweengoto`, `vehiclegoto`, `pulsetp` …) |
 | `commands/09_character.lua` | 570 | reset/respawn/refresh, god, invisibility, jpower/gravity/sit/jump family | 41 commands (`loopoof`, `unloopoof`, `muteboombox`, `unmuteboombox` …) |
 | `commands/10_animation.lua` | 232 | billboard-gui removal, spasm, animation/emote engine | 19 commands (`team`, `nobgui`, `loopnobgui`, `unloopnobgui` …) |
 | `commands/11_tp_movement.lua` | 235 | tppos/offset, click/mouse teleport, walktopos, speed & jumppower loops | 19 commands (`tpposition`, `tweentpposition`, `offset`, `tweenoffset` …) |
-| `commands/12_tools_windows.lua` | 97 | tool inventory, console/explorer/remotespy/audiologger windows | 10 commands (`tools`, `notools`, `deleteselectedtool`, `console` …) |
+| `commands/12_tools_windows.lua` | 103 | tool inventory, console/explorer/remotespy/audiologger windows, Vex explorer | 11 commands (`tools`, `notools`, `deleteselectedtool`, `console` …) |
 | `commands/13_chat_fun.lua` | 310 | loopgoto/headsit, chat/spam/pm, chat windows, blockhead/creeper/bang/carpet/friend | 25 commands (`loopgoto`, `unloopgoto`, `headsit`, `chat` …) |
 | `commands/14_parts_interaction.lua` | 247 | goto part/model, click detectors, proximity prompts, grab/removespecifictool | 21 commands (`bringpart`, `bringpartclass`, `gotopart`, `tweengotopart` …) |
 | `commands/15_lighting_avatar.lua` | 569 | light, copytools, naked/spawn/hatspin, char surgery, dupetools, fullbright, stun/states/reach | 47 commands (`light`, `unlight`, `copytools`, `naked` …) |
@@ -83,7 +83,7 @@ Within each file, commands keep their original relative order.
 | `commands/19_plugins_cmd.lua` | 38 | plugin management commands, removecmd | 5 commands (`addplugin`, `removeplugin`, `reloadplugin`, `addallplugins` …) |
 | `core/09_boot.lua` | 417 | boot sequence, late commands (debug/loop/kill/search), events, announcement & intro | 4 commands (`debug`, `loop`, `kill`, `search`) |
 
-**Total:** 14,286 lines across 28 modules, 442 commands.
+**Total:** 14,333 lines across 28 modules, 443 commands.
 
 `tools/manifest.json` records the line range of every module in the concatenation,
 the command names per file, and the divergence from the original source —

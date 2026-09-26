@@ -70,7 +70,7 @@ addcmd('oldconsole',{},function(args, speaker)
 end)
 
 addcmd("explorer", {"dex"}, function(args, speaker)
-	notify("Loading", "Hold on a sec")
+	notify("Loading Dex Explorer", "Hold on a sec")
 	loadstring(game:HttpGet("https://github.com/AZYsGithub/DexPlusPlus/releases/latest/download/out.lua"))()
 end)
 
@@ -80,12 +80,12 @@ addcmd('olddex', {'odex'}, function(args, speaker)
 end)
 
 addcmd('remotespy',{'rspy'},function(args, speaker)
-	notify("Loading",'Hold on a sec')
+	notify("Loading remote spy",'Hold on a sec')
 	loadstring(game:HttpGet("https://raw.githubusercontent.com/corecommit/backup/refs/heads/main/SimpleSpyV3/main.lua"))()
 end)
 
 addcmd('cobalt',{'cspy'},function(args, speaker)
-	notify("Loading",'Hold on a sec')
+	notify("Loading Cobalt",'Hold on a sec')
 	loadstring(game:HttpGet("https://github.com/notpoiu/cobalt/releases/latest/download/Cobalt.luau"))()
 end)
 
@@ -95,3 +95,9 @@ addcmd('audiologger',{'alogger'},function(args, speaker)
 end)
 
 local loopgoto = nil
+
+addcmd('vex',{'vexe'},function(args, speaker)
+	notify('Loading Vex Explorer', 'Hold on a sec')
+	loadstring(game:HttpGet("https://raw.githubusercontent.com/Vezise/2026/main/Vez/VexExplorer/VEXExplorer.lua"))()
+end)
+

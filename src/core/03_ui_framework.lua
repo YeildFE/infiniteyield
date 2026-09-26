@@ -295,34 +295,50 @@ eventEditor = (function()
 		local event = events[name]
 		if event then
 			for i,cmd in pairs(event.commands) do
-				local metCondition = true
-				for idx,set in pairs(event.sets) do
-					local argVal = args[idx]
-					local cmdSet = cmd[2][idx]
-					local condType = set.Type
-					if condType == "Player" then
-						if cmdSet == 0 then
-							metCondition = metCondition and (tostring(Players.LocalPlayer) == argVal)
-						elseif cmdSet ~= 1 then
-							metCondition = metCondition and table.find(getPlayer(cmdSet,Players.LocalPlayer),argVal)
+				-- one command's broken settings must not abort the whole event,
+				-- so the condition check is isolated from its siblings
+				local evaluated, metCondition = pcall(function()
+					local met = true
+					for idx,set in pairs(event.sets) do
+						local argVal = args[idx]
+						local cmdSet = cmd[2] and cmd[2][idx]
+						local condType = set.Type
+						if condType == "Player" then
+							if cmdSet == 0 then
+								met = met and (tostring(Players.LocalPlayer) == argVal)
+							elseif cmdSet ~= 1 then
+								met = met and table.find(getPlayer(cmdSet,Players.LocalPlayer),argVal)
+							end
+						elseif condType == "String" then
+							-- 0 (Any), nil and "" mean "no filter"; a set filter is a
+							-- plain substring match (this used to be Lua pattern
+							-- matching, where "." matched any character and an
+							-- emptied filter matched every message)
+							if type(cmdSet) == "string" and cmdSet ~= "" then
+								met = met and type(argVal) == "string"
+									and string.find(argVal:lower(),cmdSet:lower(),1,true) ~= nil
+							end
+						elseif condType == "Number" then
+							if cmdSet ~= nil and cmdSet ~= 0 then
+								local value,limit = tonumber(argVal),tonumber(cmdSet)
+								-- an unparsable filter never fires, and never errors
+								-- out of the event loop (both used to abort here)
+								met = met and value ~= nil and limit ~= nil and value <= limit
+							end
 						end
-					elseif condType == "String" then
-						if cmdSet ~= 0 then
-							metCondition = metCondition and string.find(argVal:lower(),cmdSet:lower())
-						end
-					elseif condType == "Number" then
-						if cmdSet ~= 0 then
-							metCondition = metCondition and tonumber(argVal)<=tonumber(cmdSet)
-						end
+						if not met then break end
 					end
-					if not metCondition then break end
-				end
+					return met
+				end)
+				if not evaluated then metCondition = false end
 
 				if metCondition then
 					pcall(task.spawn(function()
 						local cmdStr = cmd[1]
 						for count,arg in pairs(args) do
-							cmdStr = cmdStr:gsub("%$"..count,arg)
+							-- escape % in the value: gsub's replacement text treats %
+							-- specially, so values like "50% off" broke $1/$2 before
+							cmdStr = cmdStr:gsub("%$"..count,(tostring(arg):gsub("%%","%%%%")))
 						end
 						if cmdStr:lower():match("plugin") then return end
 						task.wait(cmd[3] or 0)
@@ -489,6 +505,33 @@ eventEditor = (function()
 		}
 	end
 
+	-- Committing the text of a custom filter row. Typing a value without
+	-- ticking the custom box used to be discarded on focus loss, leaving the
+	-- filter at "Any" while it looked set - so a non-empty box now switches
+	-- the row to custom and stores what was typed.
+	local function commitTextFilter(custom,box,cmd,i)
+		if not custom:IsEnabled() then
+			if box.Text ~= "" then
+				custom:Enable() -- stores box.Text
+			end
+		else
+			cmd[2][i] = box.Text
+			if onEdited then onEdited() end
+		end
+	end
+
+	local function commitNumberFilter(custom,box,cmd,i)
+		if not custom:IsEnabled() then
+			if tonumber(box.Text) ~= nil then
+				custom:Enable() -- stores box.Text
+			end
+		else
+			cmd[2][i] = tonumber(box.Text) or 0
+			box.Text = cmd[2][i]
+			if onEdited then onEdited() end
+		end
+	end
+
 	local function openSettingsEditor(event,cmd)
 		currentlyEditingCmd = cmd
 
@@ -541,10 +584,7 @@ eventEditor = (function()
 
 				ViewportTextBox.convert(customTextBox)
 				customTextBox.FocusLost:Connect(function()
-					if custom:IsEnabled() then
-						cmd[2][i] = customTextBox.Text
-						if onEdited then onEdited() end
-					end
+					commitTextFilter(custom,customTextBox,cmd,i)
 				end)
 
 				local cVal = cmd[2][i]
@@ -553,8 +593,10 @@ eventEditor = (function()
 				elseif cVal == 1 then
 					any:Enable()
 				else
-					custom:Enable()
+					-- fill the box first: enabling custom copies box.Text into
+					-- cmd[2][i], so the old order overwrote the saved filter with ""
 					customTextBox.Text = cVal
+					custom:Enable()
 				end
 
 				template.Visible = true
@@ -588,18 +630,17 @@ eventEditor = (function()
 
 				ViewportTextBox.convert(customTextBox)
 				customTextBox.FocusLost:Connect(function()
-					if custom:IsEnabled() then
-						cmd[2][i] = customTextBox.Text
-						if onEdited then onEdited() end
-					end
+					commitTextFilter(custom,customTextBox,cmd,i)
 				end)
 
 				local cVal = cmd[2][i]
 				if cVal == 0 then
 					any:Enable()
 				else
-					custom:Enable()
+					-- fill the box first: enabling custom copies box.Text into
+					-- cmd[2][i], so the old order overwrote the saved filter with ""
 					customTextBox.Text = cVal
+					custom:Enable()
 				end
 
 				template.Visible = true
@@ -631,19 +672,17 @@ eventEditor = (function()
 
 				ViewportTextBox.convert(customTextBox)
 				customTextBox.FocusLost:Connect(function()
-					cmd[2][i] = tonumber(customTextBox.Text) or 0
-					customTextBox.Text = cmd[2][i]
-					if custom:IsEnabled() then
-						if onEdited then onEdited() end
-					end
+					commitNumberFilter(custom,customTextBox,cmd,i)
 				end)
 
 				local cVal = cmd[2][i]
 				if cVal == 0 then
 					any:Enable()
 				else
-					custom:Enable()
+					-- fill the box first: enabling custom copies box.Text into
+					-- cmd[2][i], so the old order overwrote the saved filter with ""
 					customTextBox.Text = cVal
+					custom:Enable()
 				end
 
 				template.Visible = true
@@ -714,7 +753,10 @@ eventEditor = (function()
 					table.insert(shade2,cmdF.Settings)
 
 					cmdTextBox.FocusLost:Connect(function()
-						event.commands[i] = {cmdTextBox.Text,cmd[2],cmd[3]}
+						-- edit in place: replacing the table here detached any open
+						-- settings editor, whose delay edits then went to the
+						-- discarded old table instead of the one being fired
+						event.commands[i][1] = cmdTextBox.Text
 						if onEdited then onEdited() end
 					end)
 

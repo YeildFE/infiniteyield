@@ -639,4 +639,3 @@ addcmd('camdistance',{},function(args, speaker)
 	speaker.CameraMaxZoomDistance = camMax
 	speaker.CameraMinZoomDistance = camMin
 end)
-
