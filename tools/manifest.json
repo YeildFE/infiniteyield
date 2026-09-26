@@ -1,8 +1,8 @@
 {
  "source_file": "/home/z/my-project/upload/source.txt",
  "source_lines": 13844,
- "concat_lines": 13966,
- "divergence": "core/05_command_bar.lua is +122 lines vs its original slice (GUI list synced with registered commands +12, command search index +110); every other module is byte-identical to its original slice.",
+ "concat_lines": 14286,
+ "divergence": "11 of 28 modules differ from their original slices, all additively: core/05_command_bar.lua +135 (GUI list synced with registered commands +12, command search index +110, v7.0.0 CMDs rows +13), commands/04_gui_client.lua +123 (bind/unbind/binds/setprefix, notify mute, hide/unhide aliases), commands/03_waypoints.lua +67 (exportwaypoints/importwaypoints), commands/17_visuals_misc.lua +53 (aimlock/unaimlock), core/09_boot.lua +31 (search), commands/07_player_info.lua +16 (stats), commands/01_client_server.lua +15 (listaliases), core/04_notifications_ui.lua +2 (mute guard); core/02_gui_construction.lua (v7.0.0 + credits), commands/08_teleport.lua (bring alias) and commands/14_parts_interaction.lua (gotomodeldelay alias) have same-line-count edits. The other 17 modules are byte-identical to their original slices.",
  "load_order": [
   "core/01_environment.lua",
   "core/02_gui_construction.lua",
@@ -61,54 +61,55 @@
   {
    "path": "core/04_notifications_ui.lua",
    "start": 3194,
-   "end": 4243,
-   "lines": 1050,
-   "purpose": "notify(), chat/join log labels, theme color picker, settings & window button wiring, part picker",
+   "end": 4245,
+   "lines": 1052,
+   "purpose": "notify() (+ the nonotify mute guard), chat/join log labels, theme color picker, settings & window button wiring, part picker",
    "commands": []
   },
   {
    "path": "core/05_command_bar.lua",
-   "start": 4244,
-   "end": 5067,
-   "lines": 824,
+   "start": 4246,
+   "end": 5082,
+   "lines": 837,
    "purpose": "cmds table, command list UI, IndexContents/autoComplete, CMDs display entries",
    "commands": []
   },
   {
    "path": "core/06_exec_engine.lua",
-   "start": 5068,
-   "end": 5846,
+   "start": 5083,
+   "end": 5861,
    "lines": 779,
    "purpose": "execCmd/addcmd/findCmd/getPlayer/argument parsing, do_exec, command-bar input wiring",
    "commands": []
   },
   {
    "path": "core/07_features.lua",
-   "start": 5847,
-   "end": 6437,
+   "start": 5862,
+   "end": 6452,
    "lines": 591,
    "purpose": "ESP/CHMS/Locate, keybind editor, waypoint & alias refresh, input handlers, click-TP",
    "commands": []
   },
   {
    "path": "core/08_plugins.lua",
-   "start": 6438,
-   "end": 6639,
+   "start": 6453,
+   "end": 6654,
    "lines": 202,
    "purpose": "plugin load/save system, plugin editor wiring, OnTeleport guard",
    "commands": []
   },
   {
    "path": "commands/01_client_server.lua",
-   "start": 6640,
-   "end": 7585,
-   "lines": 946,
-   "purpose": "plugin store, aliases, discord/keepiy, server info & hop, rejoin/exit",
+   "start": 6655,
+   "end": 7615,
+   "lines": 961,
+   "purpose": "plugin store, aliases (addalias/listaliases), discord/keepiy, server info & hop, rejoin/exit",
    "commands": [
     "pluginstore",
     "addalias",
     "removealias",
     "clraliases",
+    "listaliases",
     "discord",
     "keepiy",
     "unkeepiy",
@@ -127,8 +128,8 @@
   },
   {
    "path": "commands/02_flying.lua",
-   "start": 7586,
-   "end": 8071,
+   "start": 7616,
+   "end": 8101,
    "lines": 486,
    "purpose": "noclip, fly/vfly/cframefly, float, swim",
    "commands": [
@@ -156,10 +157,10 @@
   },
   {
    "path": "commands/03_waypoints.lua",
-   "start": 8072,
-   "end": 8296,
-   "lines": 225,
-   "purpose": "waypoint creation/management, tween & walk-to-waypoint",
+   "start": 8102,
+   "end": 8393,
+   "lines": 292,
+   "purpose": "waypoint creation/management & JSON export/import, tween & walk-to-waypoint",
    "commands": [
     "setwaypoint",
     "waypointpos",
@@ -171,16 +172,18 @@
     "tweenwaypoint",
     "walktowaypoint",
     "deletewaypoint",
+    "exportwaypoints",
+    "importwaypoints",
     "clearwaypoints",
     "cleargamewaypoints"
    ]
   },
   {
    "path": "commands/04_gui_client.lua",
-   "start": 8297,
-   "end": 8622,
-   "lines": 326,
-   "purpose": "coregui toggles, gui hide/delete, screenshots, antikick/antiteleport, volume/fps",
+   "start": 8394,
+   "end": 8842,
+   "lines": 449,
+   "purpose": "coregui toggles, gui hide/delete, screenshots, antikick/antiteleport, volume/fps, keybinds/prefix/notify mute",
    "commands": [
     "enable",
     "disable",
@@ -208,13 +211,18 @@
     "antilag",
     "setfpscap",
     "notify",
-    "lastcommand"
+    "nonotify",
+    "lastcommand",
+    "bind",
+    "unbind",
+    "binds",
+    "setprefix"
    ]
   },
   {
    "path": "commands/05_esp_camera.lua",
-   "start": 8623,
-   "end": 9264,
+   "start": 8843,
+   "end": 9484,
    "lines": 642,
    "purpose": "esp/chams/locate, spectate, freecam, camera/fov/zoom controls",
    "commands": [
@@ -255,8 +263,8 @@
   },
   {
    "path": "commands/06_workspace.lua",
-   "start": 9265,
-   "end": 9431,
+   "start": 9485,
+   "end": 9651,
    "lines": 167,
    "purpose": "delete/btools, invis parts, antiafk, prompts, wallwalk",
    "commands": [
@@ -285,10 +293,10 @@
   },
   {
    "path": "commands/07_player_info.lua",
-   "start": 9432,
-   "end": 9587,
-   "lines": 156,
-   "purpose": "account/place info, copy id, render toggles",
+   "start": 9652,
+   "end": 9823,
+   "lines": 172,
+   "purpose": "account/place info, copy id, render toggles, perf stats",
    "commands": [
     "age",
     "chatage",
@@ -307,13 +315,14 @@
     "norender",
     "render",
     "2022materials",
-    "un2022materials"
+    "un2022materials",
+    "stats"
    ]
   },
   {
    "path": "commands/08_teleport.lua",
-   "start": 9588,
-   "end": 9948,
+   "start": 9824,
+   "end": 10184,
    "lines": 361,
    "purpose": "goto/vehicle tp, bring/loopbring, walkto/pathfind, orbit, freeze/anchor",
    "commands": [
@@ -341,8 +350,8 @@
   },
   {
    "path": "commands/09_character.lua",
-   "start": 9949,
-   "end": 10518,
+   "start": 10185,
+   "end": 10754,
    "lines": 570,
    "purpose": "reset/respawn/refresh, god, invisibility, jpower/gravity/sit/jump family",
    "commands": [
@@ -391,8 +400,8 @@
   },
   {
    "path": "commands/10_animation.lua",
-   "start": 10519,
-   "end": 10750,
+   "start": 10755,
+   "end": 10986,
    "lines": 232,
    "purpose": "billboard-gui removal, spasm, animation/emote engine",
    "commands": [
@@ -419,8 +428,8 @@
   },
   {
    "path": "commands/11_tp_movement.lua",
-   "start": 10751,
-   "end": 10985,
+   "start": 10987,
+   "end": 11221,
    "lines": 235,
    "purpose": "tppos/offset, click/mouse teleport, walktopos, speed & jumppower loops",
    "commands": [
@@ -447,8 +456,8 @@
   },
   {
    "path": "commands/12_tools_windows.lua",
-   "start": 10986,
-   "end": 11082,
+   "start": 11222,
+   "end": 11318,
    "lines": 97,
    "purpose": "tool inventory, console/explorer/remotespy/audiologger windows",
    "commands": [
@@ -466,8 +475,8 @@
   },
   {
    "path": "commands/13_chat_fun.lua",
-   "start": 11083,
-   "end": 11392,
+   "start": 11319,
+   "end": 11628,
    "lines": 310,
    "purpose": "loopgoto/headsit, chat/spam/pm, chat windows, blockhead/creeper/bang/carpet/friend",
    "commands": [
@@ -500,8 +509,8 @@
   },
   {
    "path": "commands/14_parts_interaction.lua",
-   "start": 11393,
-   "end": 11639,
+   "start": 11629,
+   "end": 11875,
    "lines": 247,
    "purpose": "goto part/model, click detectors, proximity prompts, grab/removespecifictool",
    "commands": [
@@ -530,8 +539,8 @@
   },
   {
    "path": "commands/15_lighting_avatar.lua",
-   "start": 11640,
-   "end": 12208,
+   "start": 11876,
+   "end": 12444,
    "lines": 569,
    "purpose": "light, copytools, naked/spawn/hatspin, char surgery, dupetools, fullbright, stun/states/reach",
    "commands": [
@@ -586,8 +595,8 @@
   },
   {
    "path": "commands/16_logs_fling.lua",
-   "start": 12209,
-   "end": 12635,
+   "start": 12445,
+   "end": 12871,
    "lines": 427,
    "purpose": "chat/join logs, fling family, kill helpers (attach/kill/bring/teleport)",
    "commands": [
@@ -615,10 +624,10 @@
   },
   {
    "path": "commands/17_visuals_misc.lua",
-   "start": 12636,
-   "end": 12916,
-   "lines": 281,
-   "purpose": "spin, xray, walltp, autoclick, hovername, hitbox, stareat",
+   "start": 12872,
+   "end": 13205,
+   "lines": 334,
+   "purpose": "spin, xray, walltp, autoclick, hovername, hitbox, stareat, aimlock",
    "commands": [
     "spin",
     "unspin",
@@ -637,13 +646,15 @@
     "headsize",
     "hitbox",
     "stareat",
-    "unstareat"
+    "unstareat",
+    "aimlock",
+    "unaimlock"
    ]
   },
   {
    "path": "commands/18_server_watch.lua",
-   "start": 12917,
-   "end": 13542,
+   "start": 13206,
+   "end": 13831,
    "lines": 626,
    "purpose": "role/staff watch, terrain/destroyheight/antivoid, guiscale, voice, freezeua, autokeypress",
    "commands": [
@@ -684,8 +695,8 @@
   },
   {
    "path": "commands/19_plugins_cmd.lua",
-   "start": 13543,
-   "end": 13580,
+   "start": 13832,
+   "end": 13869,
    "lines": 38,
    "purpose": "plugin management commands, removecmd",
    "commands": [
@@ -698,14 +709,15 @@
   },
   {
    "path": "core/09_boot.lua",
-   "start": 13581,
-   "end": 13966,
-   "lines": 386,
-   "purpose": "boot sequence, late commands (debug/loop/kill), events, announcement & intro",
+   "start": 13870,
+   "end": 14286,
+   "lines": 417,
+   "purpose": "boot sequence, late commands (debug/loop/kill/search), events, announcement & intro",
    "commands": [
     "debug",
     "loop",
-    "kill"
+    "kill",
+    "search"
    ]
   }
  ]

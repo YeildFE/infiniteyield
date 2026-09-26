@@ -1,5 +1,5 @@
 --========================================================================--
---  Infinite Yield FE v6.5 - modular loader
+--  Infinite Yield FE v7.0 - modular loader
 --
 --  This is the ONLY file you execute. It loads every module listed below,
 --  joins them in order and runs them as a single chunk, so all top-level

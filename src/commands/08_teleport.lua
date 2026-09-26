@@ -101,7 +101,7 @@ addcmd("togglevnoclip", {}, function(args, speaker)
 	execCmd(Clip and "vnoclip" or "vclip")
 end)
 
-addcmd('clientbring',{'cbring'},function(args, speaker)
+addcmd('clientbring',{'cbring','bring'},function(args, speaker)
 	local players = getPlayer(args[1], speaker)
 	for i,v in pairs(players)do
 		if Players[v].Character ~= nil then

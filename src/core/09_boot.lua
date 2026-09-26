@@ -78,6 +78,37 @@ addcmd('kill', {}, function(args, speaker)
     getgenv().IY_LOADED = nil
 end)
 
+addcmd('search', {'find', '?', 'cmds'}, function(args, speaker)
+    local query = getstring(1, args)
+    -- same prefix handling as the command bar, so ';esp' searches 'esp'
+    local pfx = prefix or ""
+    if pfx ~= "" and #query > #pfx and query:sub(1, #pfx) == pfx and not pfx:find("%w") then
+        query = query:sub(#pfx + 1)
+    end
+    if query == '' then
+        notify("Search", 'Usage: search [text]  (e.g. search esp, search waypoint)')
+        return
+    end
+    refreshSearchIndex()
+    local matches = {}
+    for row, text in pairs(searchIndex) do
+        if Match(text, query) then
+            matches[#matches + 1] = row.Text
+        end
+    end
+    if #matches == 0 then
+        notify("Search", 'No commands match "' .. query .. '"')
+        return
+    end
+    table.sort(matches)
+    local shown = {}
+    for i = 1, math.min(#matches, 10) do
+        shown[#shown + 1] = matches[i]
+    end
+    local extra = #matches - #shown
+    notify("Search", #matches .. ' match(es): ' .. table.concat(shown, ', ') .. (extra > 0 and '  +' .. extra .. ' more' or ''))
+end)
+
 if IsOnMobile then
 	local QuickCapture = Instance.new("TextButton")
 	local UICorner = Instance.new("UICorner")

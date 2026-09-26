@@ -94,7 +94,7 @@ addcmd('unguidelete',{'noguidelete'},function(args, speaker)
 end)
 
 local wasStayOpen = StayOpen
-addcmd('hideiy',{},function(args, speaker)
+addcmd('hideiy',{'hide'},function(args, speaker)
 	isHidden = true
 	wasStayOpen = StayOpen
 	if StayOpen == true then
@@ -106,7 +106,7 @@ addcmd('hideiy',{},function(args, speaker)
 	if not (args[1] and tostring(args[1]) == 'nonotify') then notify('IY Hidden','You can press the prefix key to access the command bar') end
 end)
 
-addcmd('showiy',{'unhideiy'},function(args, speaker)
+addcmd('showiy',{'unhideiy','unhide'},function(args, speaker)
 	isHidden = false
 	minimizeNum = -20
 	if wasStayOpen then
@@ -315,12 +315,135 @@ addcmd("setfpscap", {"fpscap", "maxfps"}, function(args, speaker)
 end)
 
 addcmd('notify',{},function(args, speaker)
+	-- no text = undo 'nonotify' (turn notifications back on)
+	if #args == 0 then
+		if not notificationsMuted then
+			notify('Notifications','Notifications are already on')
+			return
+		end
+		notificationsMuted = false
+		notify('Notifications','Notifications are back on')
+		return
+	end
 	notify(getstring(1, args))
+end)
+
+addcmd('nonotify',{'mutealerts'},function(args, speaker)
+	if notificationsMuted then
+		notify('Notifications','Notifications are already off')
+		return
+	end
+	notify('Notifications','Notifications are off (use "notify" with no text to turn them back on)')
+	notificationsMuted = true
 end)
 
 addcmd('lastcommand',{'lastcmd'},function(args, speaker)
 	if cmdHistory[1]:sub(1,11) ~= 'lastcommand' and cmdHistory[1]:sub(1,7) ~= 'lastcmd' then
 		execCmd(cmdHistory[1])
 	end
+end)
+
+-- 'x', 'Enum.KeyCode.X', 'leftclick' -> the KEY format the keybind table uses
+local function bindKeyFromArg(keyArg)
+	local key = tostring(keyArg or ''):lower()
+	if key == '' then return nil, '' end
+	if key == 'leftclick' or key == 'mousebutton1' then return 'LeftClick' end
+	if key == 'rightclick' or key == 'mousebutton2' then return 'RightClick' end
+	if key:sub(1, 13) == 'enum.keycode.' then key = key:sub(14) end
+	local upper = key:upper()
+	local ok, keyCode = pcall(function() return Enum.KeyCode[upper] end)
+	if ok and keyCode then return 'Enum.KeyCode.' .. keyCode.Name end
+	return nil, upper
+end
+
+local function bindKeyDisplay(key)
+	key = tostring(key)
+	if key == 'LeftClick' or key == 'RightClick' then return key end
+	if key:sub(1, 13) == 'Enum.KeyCode.' then return key:sub(14) end
+	return key
+end
+
+addcmd('bind',{},function(args, speaker)
+	if not args[1] or getstring(2, args) == '' then
+		notify('Keybinds','Usage: bind [key] [command]  (e.g. bind X esp, or bind X "esp | noesp" for a toggle)')
+		return
+	end
+	if string.find(getstring(2, args), "\\\\") then
+		notify('Keybind Error','Only use one backslash to keybind multiple commands into one keybind or command')
+		return
+	end
+	local key, unknown = bindKeyFromArg(args[1])
+	if not key then
+		notify('Keybind Error','Unknown key: '..tostring(unknown))
+		return
+	end
+	local cmdStr = getstring(2, args)
+	-- 'bind X esp | noesp' makes a toggle pair, same as the toggle button in the editor
+	local toggleCmd = nil
+	local bar = string.find(cmdStr, ' | ', 1, true)
+	if bar then
+		toggleCmd = string.sub(cmdStr, bar + 3)
+		cmdStr = string.sub(cmdStr, 1, bar - 1)
+		if toggleCmd == '' then toggleCmd = nil end
+	end
+	addbind(cmdStr, key, false, toggleCmd)
+	refreshbinds()
+	updatesaves()
+	notify('Keybinds Updated','Binded '..bindKeyDisplay(key)..' to '..cmdStr..(toggleCmd and ' / '..toggleCmd or ''))
+end)
+
+addcmd('unbind',{},function(args, speaker)
+	if not args[1] then
+		notify('Keybinds','Usage: unbind [key] [command]  (leave the command off to clear every bind on that key)')
+		return
+	end
+	local key, unknown = bindKeyFromArg(args[1])
+	if not key then
+		notify('Keybind Error','Unknown key: '..tostring(unknown))
+		return
+	end
+	local display = bindKeyDisplay(key)
+	local cmdStr = getstring(2, args)
+	local removed = 0
+	for i = #binds, 1, -1 do
+		if binds[i].KEY == key and (cmdStr == '' or binds[i].COMMAND == cmdStr) then
+			toggleOn[binds[i]] = nil
+			table.remove(binds, i)
+			removed = removed + 1
+		end
+	end
+	refreshbinds()
+	updatesaves()
+	if removed == 0 then
+		notify('Keybinds','No bind matches '..display..(cmdStr ~= '' and ' > '..cmdStr or ''))
+	elseif cmdStr ~= '' then
+		notify('Keybinds Updated','Unbinded '..display..' from '..cmdStr)
+	else
+		notify('Keybinds Updated','Removed '..removed..' bind(s) from '..display)
+	end
+end)
+
+addcmd('binds',{'listbinds','keybinds'},function(args, speaker)
+	if type(binds) ~= 'table' or #binds == 0 then
+		notify('Keybinds','No keybinds set')
+		return
+	end
+	local parts = {}
+	for i = 1, #binds do
+		if #parts >= 8 then break end
+		parts[#parts + 1] = bindKeyDisplay(binds[i].KEY)..' > '..tostring(binds[i].COMMAND)..(binds[i].ISKEYUP and ' (keyup)' or '')
+	end
+	local extra = #binds - #parts
+	notify('Keybinds', #binds..' bind(s): '..table.concat(parts, ', ')..(extra > 0 and '  +'..extra..' more' or ''))
+end)
+
+addcmd('setprefix',{'prefix'},function(args, speaker)
+	local newPrefix = tostring(args[1] or '')
+	if newPrefix == '' then
+		notify('Prefix','Usage: setprefix [text]  (current prefix: '..tostring(prefix)..')')
+		return
+	end
+	PrefixBox.Text = newPrefix
+	notify('Prefix','Command bar prefix set to "'..newPrefix..'"')
 end)
 

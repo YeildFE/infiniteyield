@@ -154,3 +154,19 @@ addcmd('un2022materials',{'unuse2022materials'},function(args, speaker)
 	end
 end)
 
+addcmd('stats',{'perf','performance'},function(args, speaker)
+	task.spawn(function()
+		local frames = 0
+		local started = tick()
+		local conn
+		conn = RunService.RenderStepped:Connect(function()
+			frames = frames + 1
+		end)
+		task.wait(1)
+		if conn then conn:Disconnect() end
+		local fps = math.floor(frames / math.max(tick() - started, 0.001) + 0.5)
+		local ping = math.round(speaker:GetNetworkPing() * 1000)
+		notify('Stats', fps..' fps  |  '..ping..'ms ping  |  '..#Players:GetPlayers()..' player(s)  |  place '..tostring(PlaceId))
+	end)
+end)
+
