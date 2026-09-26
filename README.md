@@ -1,11 +1,27 @@
 # Infinite Yield FE v6.5 — Modular Edition
 
 The single-file **Infinite Yield** admin script (originally one 13,844-line Lua file,
-~507 KB) split into **28 focused modules** that behave **exactly** like the original.
+~507 KB) split into **28 focused modules** that behave like the original — two later
+fixes touch `core/05_command_bar.lua` only, both listed below.
 
-> **Lossless proof:** the modules concatenated in load order are *byte-identical*
-> to the original source (SHA-256 `4dfe873e…`). Nothing was added, removed,
-> reformatted or reordered — the split only cuts at top-level statement boundaries.
+> **Split fidelity:** concatenated in load order the modules reproduce the original
+> source *byte-for-byte* (SHA-256 `4dfe873e…`) apart from two documented changes,
+> both in `core/05_command_bar.lua`. The split itself only cuts at top-level
+> statement boundaries — nothing else was added, removed, reformatted or reordered.
+>
+> 1. **GUI command list synced with the registered commands** — 12 commands that were
+>    registered but never listed were added to the `CMDs` table, and the dead
+>    `animsunanchored / freezeua` entry was corrected to `freezeunanchored / freezeua`
+>    (+13 / −1 lines). The list now shows every registered command.
+> 2. **Command search index** — the suggestion list matches registered names, aliases
+>    and tooltip descriptions, not just the text printed on the row, so typing `nofly`,
+>    `sinfo`, `setwp`… finds the command those aliases belong to; the prefix typed in
+>    the command bar (`;esp`) is accepted too, and the scroll area is refreshed after
+>    layout (+111 / −1 lines).
+>
+> Current tree: **13,966 lines** across the same 28 modules
+> (`core/05_command_bar.lua` is now 824 lines; every other module is byte-identical
+> to its original slice).
 
 ---
 
@@ -36,7 +52,7 @@ Within each file, commands keep their original relative order.
 | `core/02_gui_construction.lua` | 1,821 | main GUI tree: Holder, Cmdbar, Settings, Keybinds/Aliases/Plugins windows, intro logo | — |
 | `core/03_ui_framework.lua` | 1,221 | create() widget factory, core utilities (getRoot, toClipboard…), eventEditor, reference viewer, saves | — |
 | `core/04_notifications_ui.lua` | 1,050 | notify(), chat/join log labels, theme color picker, settings & window button wiring, part picker | — |
-| `core/05_command_bar.lua` | 702 | cmds table, command list UI, IndexContents/autoComplete, CMDs display entries | — |
+| `core/05_command_bar.lua` | 824 | cmds table, command list UI, IndexContents/autoComplete, CMDs display entries, search index | — |
 | `core/06_exec_engine.lua` | 779 | execCmd/addcmd/findCmd/getPlayer/argument parsing, do_exec, command-bar input wiring | — |
 | `core/07_features.lua` | 591 | ESP/CHMS/Locate, keybind editor, waypoint & alias refresh, input handlers, click-TP | — |
 | `core/08_plugins.lua` | 202 | plugin load/save system, plugin editor wiring, OnTeleport guard | — |
@@ -54,16 +70,17 @@ Within each file, commands keep their original relative order.
 | `commands/12_tools_windows.lua` | 97 | tool inventory, console/explorer/remotespy/audiologger windows | 10 commands (`tools`, `notools`, `deleteselectedtool`, `console` …) |
 | `commands/13_chat_fun.lua` | 310 | loopgoto/headsit, chat/spam/pm, chat windows, blockhead/creeper/bang/carpet/friend | 25 commands (`loopgoto`, `unloopgoto`, `headsit`, `chat` …) |
 | `commands/14_parts_interaction.lua` | 247 | goto part/model, click detectors, proximity prompts, grab/removespecifictool | 21 commands (`bringpart`, `bringpartclass`, `gotopart`, `tweengotopart` …) |
-| `commands/15_lighting_avatar.lua` | 569 | light, copytools, naked/spawn/hatspin, char surgery, dupetools, fullbright, stun/states/reach | 46 commands (`light`, `unlight`, `copytools`, `naked` …) |
+| `commands/15_lighting_avatar.lua` | 569 | light, copytools, naked/spawn/hatspin, char surgery, dupetools, fullbright, stun/states/reach | 47 commands (`light`, `unlight`, `copytools`, `naked` …) |
 | `commands/16_logs_fling.lua` | 427 | chat/join logs, fling family, kill helpers (attach/kill/bring/teleport) | 20 commands (`logs`, `chatlogs`, `joinlogs`, `chatlogswebhook` …) |
 | `commands/17_visuals_misc.lua` | 281 | spin, xray, walltp, autoclick, hovername, hitbox, stareat | 18 commands (`spin`, `unspin`, `xray`, `unxray` …) |
 | `commands/18_server_watch.lua` | 626 | role/staff watch, terrain/destroyheight/antivoid, guiscale, voice, freezeua, autokeypress | 33 commands (`rolewatch`, `rolewatchstop`, `rolewatchleave`, `staffwatch` …) |
 | `commands/19_plugins_cmd.lua` | 38 | plugin management commands, removecmd | 5 commands (`addplugin`, `removeplugin`, `reloadplugin`, `addallplugins` …) |
 | `core/09_boot.lua` | 386 | boot sequence, late commands (debug/loop/kill), events, announcement & intro | 3 commands (`debug`, `loop`, `kill`) |
 
-**Total:** 13,844 lines across 28 modules, 429 commands.
+**Total:** 13,966 lines across 28 modules, 430 commands.
 
-`tools/manifest.json` records the exact original line range of every module —
+`tools/manifest.json` records the line range of every module in the concatenation,
+the command names per file, and the divergence from the original source —
 it is the machine-readable version of the table above.
 
 ---
@@ -112,8 +129,9 @@ in the same session and (b) print each module as it loads.
 - After heavy edits, rebuild a single file with `tools/rebuild.py --out bundle.lua`
   to distribute without the loader.
 
-`tools/rebuild.py` can also re-verify the untouched split against the original
-monolith (adjust the `ORIGINAL` path constant if needed).
+`tools/rebuild.py` can also re-verify the split against the original monolith
+(adjust the `ORIGINAL` path constant if needed; modules changed since the split —
+like `core/05_command_bar.lua` — will show as differences).
 
 ---
 
@@ -128,6 +146,6 @@ InfiniteYield-Modular/
 │   ├── core/         ← environment, GUI, framework, engine, features, plugins, boot
 │   └── commands/     ← 19 command slices, ordered & grouped by feature
 └── tools/
-    ├── manifest.json ← module map: load order, original line ranges, commands
-    └── rebuild.py    ← lossless-verify / single-file bundler
+    ├── manifest.json ← module map: load order, line ranges, commands, divergence notes
+    └── rebuild.py    ← split verifier / single-file bundler
 ```

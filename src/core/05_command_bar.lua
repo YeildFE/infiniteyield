@@ -107,6 +107,99 @@ Match = function(name,str)
 	return name:lower():find(str:lower()) and true
 end
 
+-- A row only prints part of what a command is called: 'unfly' hides its 'nofly'
+-- alias, 'nospawnpoint' hides 'removespawnpoint', and the tooltip description is
+-- never searched at all. Typing any of those matched nothing, so the list was
+-- missing commands. Index every row with the registered names, aliases and
+-- description so it shows every command that contains what was typed.
+local searchIndex = nil
+local searchIndexCmds = -1
+local searchIndexAliases = -1
+local searchIndexRows = -1
+
+local function countAliases()
+	local n = 0
+	for _ in pairs(customAlias) do n = n + 1 end
+	return n
+end
+
+local function countRows()
+	local n = 0
+	for _, v in pairs(CMDsF:GetChildren()) do
+		if v:IsA("TextButton") then n = n + 1 end
+	end
+	return n
+end
+
+-- "unnoclip / clip" -> "unnoclip", "clip"; "esptransparency [number]" -> "esptransparency";
+-- brackets come off before the "/" split so "enable [inventory/chat/...]" yields "enable"
+local function rowTokens(rowText)
+	local tokens = {}
+	local base = rowText:match("^(.-)%s*%(") or rowText
+	base = base:match("^(.-)%s*%[") or base
+	for token in base:gmatch("[^/]+") do
+		token = token:gsub("^%s+", ""):gsub("%s+$", "")
+		if token ~= "" then tokens[#tokens + 1] = token:lower() end
+	end
+	return tokens
+end
+
+local function buildSearchIndex()
+	local byName = {}
+	for _, cmd in pairs(cmds) do
+		if cmd.NAME then
+			byName[cmd.NAME:lower()] = cmd
+			for _, alias in pairs(cmd.ALIAS or {}) do
+				byName[tostring(alias):lower()] = cmd
+			end
+		end
+	end
+	local customByCmd = {}
+	for alias, cmd in pairs(customAlias) do
+		local list = customByCmd[cmd]
+		if not list then list = {}; customByCmd[cmd] = list end
+		list[#list + 1] = alias:lower()
+	end
+	local index = {}
+	for _, v in pairs(CMDsF:GetChildren()) do
+		if v:IsA("TextButton") then
+			local parts = {v.Text:lower()}
+			local desc = v:GetAttribute("Desc")
+			if desc and desc ~= "" then parts[#parts + 1] = tostring(desc):lower() end
+			for _, token in ipairs(rowTokens(v.Text)) do
+				local cmd = byName[token]
+				if cmd then
+					parts[#parts + 1] = cmd.NAME:lower()
+					for _, alias in pairs(cmd.ALIAS or {}) do
+						parts[#parts + 1] = tostring(alias):lower()
+					end
+					local customs = customByCmd[cmd]
+					if customs then
+						for _, alias in ipairs(customs) do
+							parts[#parts + 1] = alias
+						end
+					end
+				end
+			end
+			index[v] = table.concat(parts, " ")
+		end
+	end
+	searchIndex = index
+	searchIndexCmds = #cmds
+	searchIndexAliases = countAliases()
+	searchIndexRows = countRows()
+end
+
+-- rebuilt when commands, aliases or rows change (plugins, removecmd, addalias)
+local function refreshSearchIndex()
+	if not searchIndex
+		or searchIndexCmds ~= #cmds
+		or searchIndexAliases ~= countAliases()
+		or searchIndexRows ~= countRows() then
+		buildSearchIndex()
+	end
+end
+
 local canvasPos = Vector2.new(0,0)
 local topCommand = nil
 IndexContents = function(str,bool,cmdbar,Ianim)
@@ -122,10 +215,18 @@ IndexContents = function(str,bool,cmdbar,Ianim)
 	end
 	if #chunks > 0 then str = chunks[#chunks] end
 	if str:sub(1,1) == "!" then str = str:sub(2) end
+	refreshSearchIndex()
+	-- typing the prefix first (as you would in chat) used to match nothing
+	local altStr = nil
+	local pfx = prefix or ""
+	if pfx ~= "" and #str > #pfx and str:sub(1,#pfx) == pfx and not pfx:find("%w") then
+		altStr = str:sub(#pfx + 1)
+	end
 	for i,v in next, frame:GetChildren() do
 		if v:IsA("TextButton") then
 			if bool then
-				if Match(v.Text,str) then
+				local searchText = searchIndex[v] or v.Text
+				if Match(searchText,str) or (altStr and Match(searchText,altStr)) then
 					indexnum = indexnum + 1
 					v.Visible = true
 					if topCommand == nil then
@@ -143,6 +244,15 @@ IndexContents = function(str,bool,cmdbar,Ianim)
 		end
 	end
 	frame.CanvasSize = UDim2.new(0,0,0,cmdListLayout.AbsoluteContentSize.Y)
+	-- AbsoluteContentSize is only recomputed on the next layout pass, so a sharp
+	-- change (no matches -> several) could leave rows below an unusable scroll
+	-- area; refresh it once the layout has caught up.
+	task.defer(function()
+		local contentY = cmdListLayout.AbsoluteContentSize.Y
+		if contentY > 0 then
+			frame.CanvasSize = UDim2.new(0,0,0,contentY)
+		end
+	end)
 	if not Ianim then
 		if indexnum == 0 or string.find(str, " ") then
 			if not cmdbar then
