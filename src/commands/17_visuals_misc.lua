@@ -279,3 +279,56 @@ RolewatchConnection = Players.PlayerAdded:Connect(function(player)
 	end
 end)
 
+local aimLoop = nil
+addcmd('aimlock',{'aim'},function(args, speaker)
+	if aimLoop then aimLoop:Disconnect() aimLoop = nil end
+	local targetName
+	if args[1] and args[1] ~= '' then
+		targetName = getPlayer(args[1], speaker)[1]
+	else
+		-- no target named: lock on to whoever is closest
+		local myRoot = getRoot(speaker.Character)
+		local closest, closestDist
+		for _, player in ipairs(Players:GetPlayers()) do
+			if player ~= Players.LocalPlayer then
+				local root = getRoot(player.Character)
+				if root and myRoot then
+					local dist = (root.Position - myRoot.Position).Magnitude
+					if not closestDist or dist < closestDist then
+						closest, closestDist = player.Name, dist
+					end
+				end
+			end
+		end
+		targetName = closest
+	end
+	if not targetName then
+		notify('Aimlock','No target found')
+		return
+	end
+	aimLoop = RunService.RenderStepped:Connect(function()
+		local target = Players:FindFirstChild(targetName)
+		if not target then
+			if aimLoop then aimLoop:Disconnect() aimLoop = nil end
+			notify('Aimlock','Target left, lock released')
+			return
+		end
+		local root = target.Character and target.Character:FindFirstChild('HumanoidRootPart')
+		if root then
+			local cam = workspace.CurrentCamera
+			cam.CFrame = CFrame.new(cam.CFrame.Position, root.Position)
+		end
+	end)
+	notify('Aimlock','Locked on to '..targetName..' (unaimlock releases)')
+end)
+
+addcmd('unaimlock',{'unaim','noaim'},function(args, speaker)
+	if aimLoop then
+		aimLoop:Disconnect()
+		aimLoop = nil
+		notify('Aimlock','Released')
+	else
+		notify('Aimlock','Not active')
+	end
+end)
+

@@ -53,7 +53,9 @@ end
 
 pinNotification = nil
 local notifyCount = 0
+notificationsMuted = false
 function notify(text,text2,length)
+	if notificationsMuted then return end
 	task.spawn(function()
 		local LnotifyCount = notifyCount+1
 		local notificationPinned = false

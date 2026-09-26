@@ -93,7 +93,7 @@ addcmd('tweengotomodel',{'tgotomodel','ttomodel'},function(args, speaker)
 	end
 end)
 
-addcmd('gotopartdelay',{},function(args, speaker)
+addcmd('gotopartdelay',{'gotomodeldelay'},function(args, speaker)
 	local gtpDelay = args[1] or 0.1
 	if isNumber(gtpDelay) then
 		gotopartDelay = gtpDelay

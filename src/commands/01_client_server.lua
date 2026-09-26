@@ -499,6 +499,21 @@ addcmd('clraliases',{},function(args, speaker)
 	refreshaliases()
 end)
 
+addcmd('listaliases',{'aliases','showaliases'},function(args, speaker)
+	if not customAlias or next(customAlias) == nil then
+		notify('Aliases','No custom aliases set')
+		return
+	end
+	local parts, total = {}, 0
+	for alias, cmd in pairs(customAlias) do
+		total = total + 1
+		if #parts < 8 then
+			parts[#parts + 1] = tostring(alias)..' > '..tostring(type(cmd) == 'table' and cmd.NAME or cmd)
+		end
+	end
+	notify('Aliases', total..' custom alias(es): '..table.concat(parts, ', ')..(total > #parts and '  +'..(total - #parts)..' more' or ''))
+end)
+
 addcmd('discord', {'support', 'help'}, function(args, speaker)
 	if everyClipboard then
 		toClipboard('https://discord.com/invite/78ZuWSq')

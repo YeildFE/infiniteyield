@@ -1,4 +1,4 @@
-currentVersion = "6.5.0"
+currentVersion = "7.0.0"
 
 ScaledHolder = Instance.new("Frame")
 Scale = Instance.new("UIScale")
@@ -625,7 +625,7 @@ Credits.Position = UDim2.new(0, 0, 0.9, 30)
 Credits.Size = UDim2.new(0, 250, 0, 20)
 Credits.Font = Enum.Font.SourceSansLight
 Credits.FontSize = Enum.FontSize.Size14
-Credits.Text = "Edge // Moon // Peyton // Chillz // Equss"
+Credits.Text = "Edge // Moon // Peyton // Equss"
 Credits.TextColor3 = Color3.new(1, 1, 1)
 Credits.ZIndex = 10
 
